@@ -1,7 +1,7 @@
 package framework;
 
 import controller.*;
-import java.io.*;
+import java.sql.SQLException;
 import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
@@ -68,7 +68,15 @@ public class Servlet extends HttpServlet
 			params[0] = "404";
 		}
 		
-		controller.doAction(params); //tu łapanie wyjątków
+		try
+		{
+			controller.doAction(params);
+		}
+		catch (SQLException e)
+		{
+			throw new ServletException("Błąd bazy danych: " + e.getMessage());
+		}
+		//tu jakieś łapanie innych wyjątków
 	}
 }
 

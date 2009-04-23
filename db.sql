@@ -56,7 +56,7 @@ CREATE TABLE `procedure` (
 CREATE TABLE procedure_action (
   id mediumint(8) unsigned NOT NULL auto_increment,
   `procedure` smallint(5) unsigned NOT NULL,
-  next_action mediumint(8) unsigned NOT NULL COMMENT 'ID następnej akcji w procedurze',
+  next_action mediumint(8) unsigned default NULL COMMENT 'ID następnej akcji w procedurze',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'rodzaj akcji (szczegóły w kodzie)',
   arguments text collate utf8_polish_ci NOT NULL COMMENT 'parametry - każda akcja ma inne',
   maxtime mediumint(8) unsigned NOT NULL COMMENT 'maksymalny czas, jaki _powinna_ zająć akcja',
@@ -92,7 +92,7 @@ CREATE TABLE report_action (
   `order` smallint(5) unsigned NOT NULL COMMENT 'która w kolei została wykonana ta akcja',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'patrz procedure_action',
   arguments text collate utf8_polish_ci NOT NULL COMMENT 'patrz procedure_action',
-  `date` date NOT NULL,
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (id),
   KEY report (report)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
@@ -106,9 +106,8 @@ CREATE TABLE report_action (
 CREATE TABLE `user` (
   id smallint(5) unsigned NOT NULL auto_increment,
   login varchar(32) collate utf8_polish_ci NOT NULL,
-  `hash` char(32) collate utf8_polish_ci NOT NULL COMMENT 'null tylko w momencie między dodaniem użytkownika a ustawieniem mu hasła',
+  `hash` char(32) collate utf8_polish_ci default NULL COMMENT 'null tylko w momencie między dodaniem użytkownika a ustawieniem mu hasła',
   `level` tinyint(3) unsigned NOT NULL COMMENT '0: nieaktywny, 1: gość, 2: użytkownik, 3: administrator',
   PRIMARY KEY  (id),
   UNIQUE KEY login (login)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='użytkownicy - operatorzy systemu';
-

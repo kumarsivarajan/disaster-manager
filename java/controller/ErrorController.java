@@ -28,7 +28,7 @@ public class ErrorController extends Controller
 			errCode = 500;
 		}
 		
-		setTplVar("code", errCode);
-		displayTpl("error.ftl");
+		tpl.setVar("code", errCode);
+		tpl.display("error.ftl");
 	}
 }
