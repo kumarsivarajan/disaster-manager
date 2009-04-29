@@ -74,7 +74,9 @@ public class Servlet extends HttpServlet
 		}
 		catch (SQLException e)
 		{
-			throw new ServletException("Błąd bazy danych: " + e.getMessage());
+			ServletException se = new ServletException("Błąd bazy danych: " + e.getMessage());
+			se.setStackTrace(e.getStackTrace());
+			throw se;
 		}
 		//tu jakieś łapanie innych wyjątków
 	}

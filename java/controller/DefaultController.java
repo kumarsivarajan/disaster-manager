@@ -1,7 +1,10 @@
 package controller;
 
 import framework.*;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
@@ -15,7 +18,12 @@ public class DefaultController extends Controller
 	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
-		tpl.setVar("test", db.query("SHOW TABLES"));
+		Object o = db.getCell("SELECT null");
+		
+		if (o == null)
+			tpl.setVar("test", "NULL");
+		else
+			tpl.setVar("test", o.getClass().getName());
 		tpl.display("index.ftl");
 	}
 }
