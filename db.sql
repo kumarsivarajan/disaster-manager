@@ -1,7 +1,3 @@
---
--- Baza danych: 'disaster_manager'
---
-
 -- --------------------------------------------------------
 
 --
@@ -56,6 +52,7 @@ CREATE TABLE `procedure` (
 CREATE TABLE procedure_action (
   id mediumint(8) unsigned NOT NULL auto_increment,
   `procedure` smallint(5) unsigned NOT NULL,
+  label varchar(64) collate utf8_polish_ci default NULL COMMENT 'opcjonalna nazwa akcji',
   next_action mediumint(8) unsigned default NULL COMMENT 'ID następnej akcji w procedurze',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'rodzaj akcji (szczegóły w kodzie)',
   arguments text collate utf8_polish_ci NOT NULL COMMENT 'parametry - każda akcja ma inne',

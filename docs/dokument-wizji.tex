@@ -3,14 +3,16 @@
 \usepackage[MeX]{polski}
 \usepackage[utf8]{inputenc}
 %\usepackage{amsmath,amsthm,amssymb}
-%\usepackage{graphicx}
+\usepackage{graphicx}
+%\usepackage[pdftex]{graphicx}
+
 
 \pagestyle{fancy}
-\lhead{IT Service Continuity Management}
+\lhead{Disaster manager}
 \rhead{Dokument Wizji}
 
 \author{Paweł Kimel, Tomasz Wasilczyk}
-\title{IT Service Continuity Management}
+\title{Disaster manager}
 
 \setlength{\headheight}{14.5pt}
 
@@ -25,9 +27,9 @@
 	\begin{titlepage}
 	\begin{center}
 	
-	\textsc{Information Technology Infrastructure Library\\Service Delivery}\\[6cm]
+	\textsc{Information Technology Infrastructure Library\\Service Delivery\\IT Service Continuity Management}\\[6cm]
 	Paweł Kimel, Tomasz Wasilczyk\\[1cm]
-	\textsc{\Large IT Service Continuity Management}\\[0.25cm]
+	\textsc{\Large Disaster manager}\\[0.25cm]
 	\textsc{\large Dokument Wizji}\\[8.675cm]
 	
 	\end{center}
@@ -76,6 +78,8 @@
 Aplikacja umożliwia zarządzanie bazą procedur awaryjnych (tworzenie, modyfikacja), wspomaga testowanie
 i użycie ich w sytuacji kryzysowej. Ma także możliwość monitorowania, czy doszło do sytuacji kryzysowej,
 co skraca czas wykrycia problemu i uruchomienia procedur.
+
+Strona projektu (wraz z kodem źródłowym) znajduje się pod adresem: \textbf{disaster-manager.googlecode.com}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -210,6 +214,57 @@ Operator aplikacji powinien być członkiem działu IT.
 	\item określa przedziały wartości przy których nastąpi reakcja systemu i odpowiadające im procedury,
 
 	\item zatwierdza wybór.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Schemat bazy danych}
+
+\begin{center}
+	\includegraphics[width=135mm]{db-schema.png}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Widoki}
+
+\subsection{Edycja procedur}
+
+\begin{center}
+	\includegraphics[width=135mm]{widoki/procedury.jpg}
+\end{center}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Terminarz}
+
+\subsection{Iteracja pierwsza}
+
+\begin{itemize}
+	\item Przygotowanie frameworka servletu,
+	\item opracowanie procedur obsługi zapytań (wybierania odpowiedniego kontrolera i akcji),
+	\item implementacja klasy obsługi bazy danych,
+	\item implementacja silnika szablonów odpowiedzi,
+	\item kontroler obsługi stron błędów.
+\end{itemize}
+
+
+\subsection{Iteracja druga}
+
+\begin{itemize}
+	\item System logowania,
+	\item panel zarządzania użytkownikami,
+	\item panel dodawania i edycji procedur,
+	\item moduł testowania procedur.
+\end{itemize}
+
+
+\subsection{Iteracja trzecia}
+
+\begin{itemize}
+	\item Obsługa kanałów komunikacji z użytkownikami,
+	\item implementacja czujników programowych,
+	\item projekt, budowa prototypu i oprogramowanie czujnika sprzętowego,
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

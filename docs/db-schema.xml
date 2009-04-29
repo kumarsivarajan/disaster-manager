@@ -347,6 +347,11 @@
 <OPTIONSELECT Value="0" />
 </OPTIONSELECTED>
 </COLUMN>
+<COLUMN ID="1109" ColName="label" PrevColName="" Pos="6" idDatatype="20" DatatypeParams="(64)" Width="-1" Prec="-1" PrimaryKey="0" NotNull="0" AutoInc="0" IsForeignKey="0" DefaultValue="" Comments="opcjonalna nazwa akcji">
+<OPTIONSELECTED>
+<OPTIONSELECT Value="0" />
+</OPTIONSELECTED>
+</COLUMN>
 <COLUMN ID="1029" ColName="next_action" PrevColName="" Pos="2" idDatatype="3" DatatypeParams="" Width="-1" Prec="-1" PrimaryKey="0" NotNull="0" AutoInc="0" IsForeignKey="1" DefaultValue="" Comments="ID nast\196\153pnej akcji w procedurze">
 <OPTIONSELECTED>
 <OPTIONSELECT Value="1" />
