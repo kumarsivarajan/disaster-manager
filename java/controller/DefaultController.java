@@ -1,10 +1,7 @@
 package controller;
 
 import framework.*;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 

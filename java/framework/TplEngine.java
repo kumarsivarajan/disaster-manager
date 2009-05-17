@@ -2,8 +2,9 @@ package framework;
 
 import freemarker.template.*;
 import java.io.*;
+import java.nio.charset.Charset;
 import java.util.*;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 
 //http://freemarker.org/docs/dgui.html
 public class TplEngine
@@ -13,10 +14,12 @@ public class TplEngine
 	
 	final private Map<String, Object> vars = new HashMap<String, Object>();
 	final private Map<String, Object> decoratorVars = new HashMap<String, Object>();
-	final private PrintWriter writer;
+	final private ServletOutputStream output;
 	final private String decoratorTemplate;
 	
-	public TplEngine(String decoratorTemplate, PrintWriter writer) throws ServletException
+	final private Charset outputCharset = Charset.forName("UTF-8");
+	
+	public TplEngine(String decoratorTemplate, ServletOutputStream writer) throws ServletException
 	{
 		if (conf == null)
 		{
@@ -33,10 +36,13 @@ public class TplEngine
 						e.getMessage());
 			}
 			conf.setObjectWrapper(new DefaultObjectWrapper());
+			
+			conf.setDefaultEncoding("UTF-8");
+			conf.setEncoding(Locale.getDefault(), "UTF-8");
 		}
 		
 		this.decoratorTemplate = decoratorTemplate; // może być null
-		this.writer = writer; // może być null
+		this.output = writer; // może być null
 	}
 	
 	public void setVar(String var, Object value)
@@ -123,12 +129,31 @@ public class TplEngine
 	
 	public void display(String template) throws ServletException
 	{
-		if (writer == null)
+		if (output == null)
 			throw new NullPointerException("Nie ustawiono obiektu piszącego");
 		if (template == null)
 			throw new NullPointerException();
-		
-		writer.print(parse(template));
-		writer.flush();
+	
+		try
+		{
+			output.write(parse(template).getBytes(outputCharset));
+			output.flush();
+		}
+		catch (IOException e)
+		{
+			throw new ServletException(e);
+		}
+	}
+	
+	public void writeDirectly(byte[] contents) throws ServletException
+	{
+		try
+		{
+			this.output.write(contents);
+		}
+		catch (IOException e)
+		{
+			throw new ServletException(e);
+		}
 	}
 }

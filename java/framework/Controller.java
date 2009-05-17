@@ -2,14 +2,14 @@ package framework;
 
 import java.io.*;
 import java.sql.SQLException;
-import javax.servlet.ServletException;
+import javax.servlet.*;
 import javax.servlet.http.*;
 
 abstract public class Controller
 {
 	final protected HttpServletRequest request;
 	final protected HttpServletResponse response;
-	final protected PrintWriter output;
+	final protected ServletOutputStream output;
 	final protected TplEngine tpl;
 	final protected DBEngine db;
 	
@@ -28,7 +28,7 @@ abstract public class Controller
 		
 		try
 		{
-			output = response.getWriter();
+			output = response.getOutputStream();
 		}
 		catch (IOException e)
 		{
@@ -62,5 +62,6 @@ abstract public class Controller
 	/*
 	 * pierwszym parametrem w params[] powinna być nazwa akcji
 	 */
-	abstract public void doAction(String[] params) throws ServletException, SQLException;
+	abstract public void doAction(String[] params)
+			throws ServletException, SQLException;
 }

@@ -18,6 +18,8 @@ public class Servlet extends HttpServlet
 		
 		matchers.add(new ControllerMatch("Default", "^/(?:index\\.html)?$"));
 		matchers.add(new ControllerMatch("Error", "^/error-([0-9]+)\\.html$"));
+		matchers.add(new ControllerMatch("StaticContent", "^/static/(.+)$"));
+		matchers.add(new ControllerMatch("StaticContent", "^/(favicon\\.ico)"));
 	}
 	
 	@Override public void finalize() throws Throwable
@@ -55,6 +57,8 @@ public class Servlet extends HttpServlet
 				controller = new DefaultController(request, response);
 			else if (cm.controllerName.equals("Error"))
 				controller = new ErrorController(request, response);
+			else if (cm.controllerName.equals("StaticContent"))
+				controller = new StaticContentController(request, response);
 			else
 				continue;
 			

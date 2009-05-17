@@ -9,10 +9,15 @@
 	<#--
 		<script charset="utf-8" type="text/javascript" src="/disaster-manager-1240440294.js"></script>
 		<link rel="stylesheet" href="/disaster-manager-1240440294-unc.css" type="text/css" />
-		<link rel="shortcut icon" href="/favicon.ico" />
 	-->
+
+	<link rel="shortcut icon" href="/favicon.ico" />
 </head>
 <body>
+
+<p>Zażółć gęślą jaźń</p>
+<p>ZAŻÓŁĆ GĘŚLĄ JAŹŃ</p>
+
 ${contents}
 </body>
 </html>
