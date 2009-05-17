@@ -1,0 +1,22 @@
+#mainTop, #mainMain
+{
+	margin: auto;
+	width: 900px;
+}
+
+#mainTop
+{
+	background-color: #EEEEEE;
+}
+
+#mainMenu
+{
+	float: left;
+	width: 150px;
+	border: 1px solid black;
+}
+
+#mainContents
+{
+	margin-left: 160px;
+}

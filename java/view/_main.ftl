@@ -8,16 +8,29 @@
 
 	<#--
 		<script charset="utf-8" type="text/javascript" src="/disaster-manager-1240440294.js"></script>
-		<link rel="stylesheet" href="/disaster-manager-1240440294-unc.css" type="text/css" />
 	-->
 
+	<link rel="stylesheet" href="/static/style.css" type="text/css" />
 	<link rel="shortcut icon" href="/favicon.ico" />
+
 </head>
 <body>
 
-<p>Zażółć gęślą jaźń</p>
-<p>ZAŻÓŁĆ GĘŚLĄ JAŹŃ</p>
+<div id="mainTop">
+	<h1>Disaster Manager</h1>
+	<p>Zażółć gęślą jaźń, ZAŻÓŁĆ GĘŚLĄ JAŹŃ.</p>
+</div>
 
-${contents}
+<div id="mainMain">
+	<div id="mainMenu">
+		<ul>
+			<li><a href="/">Start</a></li>
+		</ul>
+	</div>
+	<div id="mainContents">
+		${contents}
+	</div>
+</div>
+
 </body>
 </html>
