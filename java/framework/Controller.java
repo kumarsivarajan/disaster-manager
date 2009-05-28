@@ -11,7 +11,6 @@ abstract public class Controller
 	final protected HttpServletResponse response;
 	final protected ServletOutputStream output;
 	final protected TplEngine tpl;
-	final protected DBEngine db;
 	
 	final static private String defaultContentType = "application/xhtml+xml";
 	
@@ -39,16 +38,6 @@ abstract public class Controller
 		tpl = new TplEngine("_main.ftl", output);
 		tpl.setDecoratorVar("title", "Disaster Manager"); //TODO
 		tpl.setDecoratorVar("contentType", defaultContentType); //TODO
-		
-		try
-		{
-			db = new DBEngine();
-		}
-		catch (SQLException e)
-		{
-			throw new ServletException(
-				"Błąd tworzenia połączenia do bazy danych: " + e.getMessage());
-		}
 	}
 	
 	protected void setContentType(String contentType)

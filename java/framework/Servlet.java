@@ -20,6 +20,7 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("Error", "^/error-([0-9]+)\\.html$"));
 		matchers.add(new ControllerMatch("StaticContent", "^/static/(.+)$"));
 		matchers.add(new ControllerMatch("StaticContent", "^/(favicon\\.ico)"));
+		matchers.add(new ControllerMatch("ProcedureManager", "^/procedureManagement/((?:[a-z0-9-]+/)*)"));
 	}
 	
 	@Override public void finalize() throws Throwable
@@ -59,6 +60,8 @@ public class Servlet extends HttpServlet
 				controller = new ErrorController(request, response);
 			else if (cm.controllerName.equals("StaticContent"))
 				controller = new StaticContentController(request, response);
+			else if (cm.controllerName.equals("ProcedureManager"))
+				controller = new ProcedureManagerController(request, response);
 			else
 				continue;
 			
@@ -71,7 +74,18 @@ public class Servlet extends HttpServlet
 			params = new String[1];
 			params[0] = "404";
 		}
-		
+
+		try
+		{
+			DBEngine.getConnection();
+		}
+		catch (SQLException e)
+		{
+			controller.setContentType("text/plain");
+			controller.tpl.writeDirectly("Nie mozna polaczyc sie z baza danych");
+			return;
+		}
+
 		try
 		{
 			controller.doAction(params);

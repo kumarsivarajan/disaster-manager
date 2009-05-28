@@ -24,12 +24,12 @@ public class RegexpMatcher
 		
 		if (!matcher.matches())
 			return null;
-		
+
 		String[] ret = new String[groupCount];
 		
 		for (int i = 0; i < groupCount; i++)
 			ret[i] = matcher.replaceFirst("$" + (i + 1)); //to można szybciej, ładniej itp
-		
+
 		return ret;
 	}
 }

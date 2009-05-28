@@ -25,6 +25,7 @@
 	<div id="mainMenu">
 		<ul>
 			<li><a href="/">Start</a></li>
+			<li><a href="/procedureManagement/list/">Zarządzanie procedurami</a></li>
 		</ul>
 	</div>
 	<div id="mainContents">

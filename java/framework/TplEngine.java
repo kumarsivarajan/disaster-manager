@@ -79,7 +79,7 @@ public class TplEngine
 		}
 		
 		if (tpl == null)
-			throw new ServletException("Plik template nie istnieje (" + template + ")");
+			throw new ServletException("Plik template nie istnieje, lub jest niepoprawny (" + template + ")");
 		
 		templates.put(template, tpl);
 		
@@ -155,5 +155,10 @@ public class TplEngine
 		{
 			throw new ServletException(e);
 		}
+	}
+
+	public void writeDirectly(String contents) throws ServletException
+	{
+		writeDirectly(contents.getBytes(outputCharset));
 	}
 }
