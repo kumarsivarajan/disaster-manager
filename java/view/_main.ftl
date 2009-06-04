@@ -12,26 +12,25 @@
 
 	<link rel="stylesheet" href="/static/style.css" type="text/css" />
 	<link rel="shortcut icon" href="/favicon.ico" />
+	<link rel="stylesheet" href="static/style.css" type="text/css" />
+	<link rel="shortcut icon" href="favicon.ico" />
 
 </head>
 <body>
-
-<div id="mainTop">
-	<h1>Disaster Manager</h1>
-	<p>Zażółć gęślą jaźń, ZAŻÓŁĆ GĘŚLĄ JAŹŃ.</p>
+<div id="TOP">
+	Disaster Manager
 </div>
-
-<div id="mainMain">
-	<div id="mainMenu">
-		<ul>
-			<li><a href="/">Start</a></li>
-			<li><a href="/procedureManagement/list/">Zarządzanie procedurami</a></li>
-		</ul>
-	</div>
-	<div id="mainContents">
-		${contents}
-	</div>
+<div id="MENU">
+	<ul id="mainmenu">
+		<#list menubuttons as button>
+			<li id="menuitem"><a href="${button.url}">${button.caption}</a></li>
+		</#list>
+	</ul>
 </div>
-
+<div id="MAIN">
+	${contents}
+</div>
+<div id="FEET">
+</div>
 </body>
 </html>
