@@ -27,13 +27,8 @@ public class TplEngine
 			
 			try
 			{
-               
-               
-
 				conf.setDirectoryForTemplateLoading(
 						new File(Servlet.rootPath + "WEB-INF/classes/view"));
-               
-                
 			}
 			catch (IOException e)
 			{
@@ -81,7 +76,7 @@ public class TplEngine
 		catch (IOException e)
 		{
 			tpl = null;
-            //throw new ServletException(e.getMessage());
+			//throw new ServletException(e.getMessage());
 		}
 		
 		if (tpl == null)

@@ -1,4 +1,4 @@
-html, body {
+mainmenuhtml, body {
 	background-color: #fff;
 	color: #000;
 	margin: 0;
@@ -39,14 +39,14 @@ html, body {
 	height: 15px;
 }
 
-ul#mainmenu, ul li#menuitem {
+ul#mainmenu, ul li.menuitem {
 	display: block;
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-ul li#menuitem {
+ul li.menuitem {
 	width: 190px;
 	padding-left: 10px;
 	background: #686;

@@ -68,9 +68,9 @@ public class Servlet extends HttpServlet
 				controller = new ProcedureManagerController(request, response);
 			else if (cm.controllerName.equals("ActionManager"))
 				controller = new ActionManagerController(request, response);
-            else if (cm.controllerName.equals("Credits"))
-                controller = new CreditsController(request, response);
-            else
+			else if (cm.controllerName.equals("Credits"))
+				controller = new CreditsController(request, response);
+			else
 				throw new AssertionError("Nie uwzględniono kontrolera: " + cm.controllerName);
 			
 			params = paramsM;
@@ -81,7 +81,6 @@ public class Servlet extends HttpServlet
 			controller = new ErrorController(request, response);
 			params = new String[1];
 			params[0] = "404";
-			
 		}
 
 		try

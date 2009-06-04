@@ -43,33 +43,31 @@ abstract public class Controller
 			throw new ServletException("Nie mogę pobrać wyjścia dla odpowiedzi: " +
 					e.getMessage());
 		}
-		
+
 		tpl = new TplEngine("_main.ftl", output);
 		tpl.setDecoratorVar("title", "Disaster Manager"); //TODO
 		tpl.setDecoratorVar("contentType", defaultContentType); //TODO
-        SimpleSequence menu = new SimpleSequence();
-        {
-            SimpleHash button = new SimpleHash();
-            button.put("url", "/");
-            button.put("caption", "Strona Główna");
-            menu.add(button);
-        }
-        {
-            SimpleHash button = new SimpleHash();
-            button.put("url", "/procedureManagement/list/");
-            button.put("caption", "Procedury");
-            menu.add(button);
-        }
-        {
-            SimpleHash button = new SimpleHash();
-            button.put("url", "/credits");
-            button.put("caption", "O programie");
-            menu.add(button);
-        }
+		SimpleSequence menu = new SimpleSequence();
+		{
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/");
+			button.put("caption", "Strona Główna");
+			menu.add(button);
+		}
+		{
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/procedureManagement/list/");
+			button.put("caption", "Procedury");
+			menu.add(button);
+		}
+		{
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/credits/");
+			button.put("caption", "O programie");
+			menu.add(button);
+		}
 
-        tpl.setDecoratorVar("menubuttons", menu);
-
-		
+		tpl.setDecoratorVar("menubuttons", menu);
 	}
 	
 	protected void setContentType(String contentType)

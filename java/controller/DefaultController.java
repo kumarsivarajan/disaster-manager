@@ -16,14 +16,14 @@ public class DefaultController extends Controller
 	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
-        SimpleSequence sites = new SimpleSequence();
-        {
-            SimpleHash site = new SimpleHash();
-            site.put("url", "procedureManagement/list/");
-            site.put("caption", "Zarządzanie procedurami");
-            sites.add(site);
-        }
-        tpl.setVar("sites", sites);
+		SimpleSequence sites = new SimpleSequence();
+		{
+			SimpleHash site = new SimpleHash();
+			site.put("url", "procedureManagement/list/");
+			site.put("caption", "Zarządzanie procedurami");
+			sites.add(site);
+		}
+		tpl.setVar("sites", sites);
 		tpl.display("index.ftl");
 	}
 }

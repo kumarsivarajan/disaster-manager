@@ -12,8 +12,6 @@
 
 	<link rel="stylesheet" href="/static/style.css" type="text/css" />
 	<link rel="shortcut icon" href="/favicon.ico" />
-	<link rel="stylesheet" href="static/style.css" type="text/css" />
-	<link rel="shortcut icon" href="favicon.ico" />
 
 </head>
 <body>
@@ -23,7 +21,7 @@
 <div id="MENU">
 	<ul id="mainmenu">
 		<#list menubuttons as button>
-			<li id="menuitem"><a href="${button.url}">${button.caption}</a></li>
+			<li class="menuitem"><a href="${button.url}">${button.caption}</a></li>
 		</#list>
 	</ul>
 </div>

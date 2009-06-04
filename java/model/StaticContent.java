@@ -13,8 +13,8 @@ public class StaticContent
 	//private static HashMap<String, String> mimetypeMapping;
 	
 	private final static String staticContentDir = "webapps/ROOT/WEB-INF/classes/staticContent";
-    //private final static String staticContentDir = "c:/code/NetBeans/disaster/build/web/WEB-INF/classes/staticContent";
-    private final static int maxFileSize = 1024*1024; //1MB
+	//private final static String staticContentDir = "c:/code/NetBeans/disaster/build/web/WEB-INF/classes/staticContent";
+	private final static int maxFileSize = 1024*1024; //1MB
 	private static MimetypesFileTypeMap mimetypeMap = getMimeTypeMap();
 	
 	public final byte[] contents;
