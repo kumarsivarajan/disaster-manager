@@ -50,19 +50,19 @@ abstract public class Controller
         SimpleSequence menu = new SimpleSequence();
         {
             SimpleHash button = new SimpleHash();
-            button.put("url", "/index.html");
+            button.put("url", "/");
             button.put("caption", "Strona Główna");
             menu.add(button);
         }
         {
             SimpleHash button = new SimpleHash();
-            button.put("url", "/procedures.html");
+            button.put("url", "/procedureManagement/list/");
             button.put("caption", "Procedury");
             menu.add(button);
         }
         {
             SimpleHash button = new SimpleHash();
-            button.put("url", "/credits.html");
+            button.put("url", "/credits");
             button.put("caption", "O programie");
             menu.add(button);
         }

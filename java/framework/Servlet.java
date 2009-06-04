@@ -6,12 +6,14 @@ import java.util.Vector;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import tools.RegexpMatcher;
+import freemarker.core.*;
 
 public class Servlet extends HttpServlet
 {
 	final private Vector<ControllerMatch> matchers = new Vector<ControllerMatch>();
 	final public static String rootPath = "/srv/tomcat6/webapps/ROOT/"; //to mozna automatycznie?
-	
+	//final public static String rootPath = "c:/code/NetBeans/disaster/build/web/";
+
 	@Override public void init() throws ServletException
 	{
 		super.init();
@@ -22,8 +24,9 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("StaticContent", "^/(favicon\\.ico)"));
 		matchers.add(new ControllerMatch("ProcedureManager", "^/procedureManagement/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("ActionManager", "^/actionManagement/((?:[a-z0-9-]+/)*)"));
+		matchers.add(new ControllerMatch("Credits", "^/credits/((?:[a-z0-9-]+/)*)"));
 	}
-	
+
 	@Override public void finalize() throws Throwable
 	{
 		super.finalize();
@@ -65,7 +68,9 @@ public class Servlet extends HttpServlet
 				controller = new ProcedureManagerController(request, response);
 			else if (cm.controllerName.equals("ActionManager"))
 				controller = new ActionManagerController(request, response);
-			else
+            else if (cm.controllerName.equals("Credits"))
+                controller = new CreditsController(request, response);
+            else
 				throw new AssertionError("Nie uwzględniono kontrolera: " + cm.controllerName);
 			
 			params = paramsM;
@@ -76,6 +81,7 @@ public class Servlet extends HttpServlet
 			controller = new ErrorController(request, response);
 			params = new String[1];
 			params[0] = "404";
+			
 		}
 
 		try
