@@ -4,6 +4,7 @@ import java.io.*;
 import java.sql.SQLException;
 import javax.servlet.*;
 import javax.servlet.http.*;
+import freemarker.template.*;
 
 abstract public class Controller
 {
@@ -46,6 +47,29 @@ abstract public class Controller
 		tpl = new TplEngine("_main.ftl", output);
 		tpl.setDecoratorVar("title", "Disaster Manager"); //TODO
 		tpl.setDecoratorVar("contentType", defaultContentType); //TODO
+        SimpleSequence menu = new SimpleSequence();
+        {
+            SimpleHash button = new SimpleHash();
+            button.put("url", "/index.html");
+            button.put("caption", "Strona Główna");
+            menu.add(button);
+        }
+        {
+            SimpleHash button = new SimpleHash();
+            button.put("url", "/procedures.html");
+            button.put("caption", "Procedury");
+            menu.add(button);
+        }
+        {
+            SimpleHash button = new SimpleHash();
+            button.put("url", "/credits.html");
+            button.put("caption", "O programie");
+            menu.add(button);
+        }
+
+        tpl.setDecoratorVar("menubuttons", menu);
+
+		
 	}
 	
 	protected void setContentType(String contentType)
