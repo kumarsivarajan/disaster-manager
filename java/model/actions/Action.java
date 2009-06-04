@@ -4,6 +4,7 @@ import framework.*;
 import java.sql.SQLException;
 import java.util.*;
 import model.Procedure;
+import tools.Pair;
 
 public abstract class Action
 {
@@ -14,13 +15,22 @@ public abstract class Action
 	protected Integer maxTime;
 	protected boolean added = false;
 
-	protected enum ActionType { ACTION_MESSAGE }
+	protected static enum ActionType { ACTION_MESSAGE }
 
 	private static HashMap<Integer, Action> actionCache =
 			new HashMap<Integer, Action>();
 
 	private static HashMap<Integer, Action[]> procedureActionCache =
 			new HashMap<Integer, Action[]>();
+
+	public static Vector<Pair<Integer, String>> getActionTypes()
+	{
+		Vector<Pair<Integer, String>> out =
+				new Vector<Pair<Integer, String>>();
+		for (int i = 1; i <= ActionType.values().length; i++)
+			out.add(new Pair<Integer, String>(i, actionTypeToName(actionTypeFromInt(i))));
+		return out;
+	}
 
 	public Action(Procedure procedure)
 	{
@@ -164,6 +174,17 @@ public abstract class Action
 		{
 			case ACTION_MESSAGE:
 				return 1;
+			default:
+				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
+		}
+	}
+
+	public static String actionTypeToName(ActionType type)
+	{
+		switch (type)
+		{
+			case ACTION_MESSAGE:
+				return "Wiadomość dla operatora";
 			default:
 				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
 		}

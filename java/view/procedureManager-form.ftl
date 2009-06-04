@@ -19,7 +19,16 @@
 
 <h3>Akcje</h3>
 
-<p><a href="/actionManagement/add/${procedure.getID()}/">dodaj</a></p>
+<p>
+
+	<select>
+		<#list STATICS["model.actions.Action"].getActionTypes() as actionType>
+			<option value="${actionType.getFirst()}">${actionType.getSecond()}</option>
+		</#list>
+	</select>
+
+	<a href="/actionManagement/add/${procedure.getID()}/">dodaj</a>
+</p>
 
 <table>
 	<thead>

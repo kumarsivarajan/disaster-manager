@@ -1,5 +1,6 @@
 package framework;
 
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.*;
 import java.io.*;
 import java.nio.charset.Charset;
@@ -43,12 +44,17 @@ public class TplEngine
 		
 		this.decoratorTemplate = decoratorTemplate; // może być null
 		this.output = writer; // może być null
+
+		vars.put("STATICS", BeansWrapper.getDefaultInstance().getStaticModels());
+		decoratorVars.put("STATICS", BeansWrapper.getDefaultInstance().getStaticModels());
 	}
 	
 	public void setVar(String var, Object value)
 	{
 		if (var == null)
 			throw new NullPointerException();
+		if (var.equals("STATICS"))
+			throw new IllegalArgumentException("Zmienna tylko do odczytu");
 		vars.put(var, value);
 	}
 	
@@ -56,6 +62,8 @@ public class TplEngine
 	{
 		if (var == null)
 			throw new NullPointerException();
+		if (var.equals("STATICS"))
+			throw new IllegalArgumentException("Zmienna tylko do odczytu");
 		decoratorVars.put(var, value);
 	}
 	
@@ -87,7 +95,7 @@ public class TplEngine
 		return tpl;
 	}
 	
-	protected String parseOne(Map vars, String template) throws ServletException
+	protected String parseOne(Map<String, Object> vars, String template) throws ServletException
 	{
 		if (template == null)
 			throw new NullPointerException();
