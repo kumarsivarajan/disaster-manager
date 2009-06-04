@@ -24,6 +24,14 @@ abstract public class Controller
 		
 		response.setContentType(defaultContentType);
 		response.setCharacterEncoding("UTF-8");
+		try
+		{
+			request.setCharacterEncoding("UTF-8");
+		}
+		catch (UnsupportedEncodingException e)
+		{
+			throw new ServletException("Brak obsługi kodowania Unicode");
+		}
 		
 		try
 		{
@@ -47,7 +55,45 @@ abstract public class Controller
 		response.setContentType(contentType);
 		tpl.setDecoratorVar("contentType", contentType); //TODO
 	}
-	
+
+	protected String getParameterString(String paramName)
+	{
+		String param = request.getParameter(paramName);
+		if (param == null)
+			return "";
+		return param;
+	}
+
+	protected long getParameterLong(String paramName)
+	{
+		String param = request.getParameter(paramName);
+		try
+		{
+			return Long.parseLong(param);
+		}
+		catch (NumberFormatException e)
+		{
+			return 0;
+		}
+	}
+
+	protected boolean getParameterBoolean(String paramName)
+	{
+		String param = request.getParameter(paramName);
+		if (param == null)
+			return false;
+		param = param.trim();
+		if (param.equals("") || param.equals("0"))
+			return false;
+		return true;
+	}
+
+	protected void message(String message) throws ServletException
+	{
+		tpl.setVar("message", message);
+		tpl.display("_message.ftl");
+	}
+
 	/*
 	 * pierwszym parametrem w params[] powinna być nazwa akcji
 	 */

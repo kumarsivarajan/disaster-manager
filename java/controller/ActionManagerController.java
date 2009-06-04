@@ -4,59 +4,42 @@ import framework.*;
 import java.sql.SQLException;
 import javax.servlet.*;
 import javax.servlet.http.*;
-import model.Procedure;
+import model.actions.*;
 
-public class ProcedureManagerController extends Controller
+public class ActionManagerController extends Controller
 {
-	public ProcedureManagerController(HttpServletRequest request,
+	public ActionManagerController(HttpServletRequest request,
 		HttpServletResponse response) throws ServletException
 	{
 		super(request, response);
 	}
 
-	private void listAction() throws ServletException, SQLException
-	{
-		Procedure[] procedures = Procedure.getAllProcedures();
-		tpl.setVar("procedures", procedures);
-		tpl.display("procedureManager-list.ftl");
-	}
-
 	private void addAction() throws ServletException, SQLException
 	{
-		Procedure proc = new Procedure();
+		//najpierw formularz z typem akcji do wybrania (najlepiej od razu na liście procedury)
+
+		throw new ServletException("Nie zaimplementowano");
+
+		/*Action action = new Action();
 		proc.save(false);
 
 		tpl.setVar("procedure", proc);
 		tpl.display("procedureManager-form.ftl");
-		return;
+		return;*/
 	}
-
+	
+/*
 	private void editAction(int id) throws ServletException, SQLException
 	{
-		Procedure proc = Procedure.getProcedureByID(id);
-
-		if (request.getMethod().equalsIgnoreCase("POST"))
-		{ //zapisywanie zmian w opisie albo nazwy procedury
-			proc.setName(getParameterString("name"));
-			proc.setDescription(getParameterString("description"));
-			proc.setActive(getParameterBoolean("active"));
-
-			proc.save(true);
-		}
-
-		proc.getActions();
-
-		tpl.setVar("procedure", proc);
-		tpl.display("procedureManager-form.ftl");
+		
 	}
 
 	private void deleteAction(int id) throws ServletException, SQLException
 	{
-		Procedure proc = Procedure.getProcedureByID(id);
-		Procedure.delete(proc);
-		message("Procedura usunięta");
+		
 	}
-
+*/
+	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
 		if (params.length != 1)
@@ -64,11 +47,9 @@ public class ProcedureManagerController extends Controller
 		params = params[0].split("/");
 		
 		String akcja = params[0];
-		if (akcja.equals("list"))
-			listAction();
-		else if (akcja.equals("add"))
+		if (akcja.equals("add"))
 			addAction();
-		else if (akcja.equals("edit"))
+		/*else if (akcja.equals("edit"))
 		{
 			if (params.length != 2)
 				throw new ServletException("Zła ilośc parametrów (2st)");
@@ -79,7 +60,7 @@ public class ProcedureManagerController extends Controller
 			if (params.length != 2)
 				throw new ServletException("Zła ilośc parametrów (2st)");
 			deleteAction(Integer.parseInt(params[1]));
-		}
+		}*/
 		else
 			throw new ServletException("TODO: komunikaty 404: " + akcja);
 	}

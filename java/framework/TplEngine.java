@@ -99,7 +99,9 @@ public class TplEngine
 		}
 		catch (TemplateException e)
 		{
-			throw new ServletException("Błąd w szablonie: " + e.getMessage());
+			ServletException e2 = new ServletException("Błąd w szablonie: " + e.getMessage());
+			e2.setStackTrace(e.getStackTrace());
+			throw e2;
 		}
 		catch (IOException e)
 		{

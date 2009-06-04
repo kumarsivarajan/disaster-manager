@@ -21,6 +21,7 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("StaticContent", "^/static/(.+)$"));
 		matchers.add(new ControllerMatch("StaticContent", "^/(favicon\\.ico)"));
 		matchers.add(new ControllerMatch("ProcedureManager", "^/procedureManagement/((?:[a-z0-9-]+/)*)"));
+		matchers.add(new ControllerMatch("ActionManager", "^/actionManagement/((?:[a-z0-9-]+/)*)"));
 	}
 	
 	@Override public void finalize() throws Throwable
@@ -62,8 +63,10 @@ public class Servlet extends HttpServlet
 				controller = new StaticContentController(request, response);
 			else if (cm.controllerName.equals("ProcedureManager"))
 				controller = new ProcedureManagerController(request, response);
+			else if (cm.controllerName.equals("ActionManager"))
+				controller = new ActionManagerController(request, response);
 			else
-				continue;
+				throw new AssertionError("Nie uwzględniono kontrolera: " + cm.controllerName);
 			
 			params = paramsM;
 		}

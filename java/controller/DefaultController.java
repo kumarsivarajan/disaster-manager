@@ -15,12 +15,6 @@ public class DefaultController extends Controller
 	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
-		Object o = DBEngine.getCell("SELECT null");
-		
-		if (o == null)
-			tpl.setVar("test", "NULL");
-		else
-			tpl.setVar("test", o.getClass().getName());
 		tpl.display("index.ftl");
 	}
 }

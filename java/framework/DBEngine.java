@@ -46,6 +46,49 @@ public class DBEngine
 		return currConnection;
 	}
 
+	public int doUpdateQueryObj(String query) throws SQLException
+	{
+		Statement stmt = null;
+		ResultSet rs = null;
+		SQLException e = null;
+
+		try
+		{
+			stmt = conn.createStatement();
+			return stmt.executeUpdate(query);
+		}
+		catch (SQLException ex)
+		{
+			e = ex;
+		}
+		finally
+		{
+			if (rs != null)
+				try
+				{
+					rs.close();
+				}
+				catch (SQLException ex) { }
+
+			if (stmt != null)
+				try
+				{
+					stmt.close();
+				}
+				catch (SQLException ex) { }
+		}
+
+		if (e != null)
+			throw e;
+
+		throw new AssertionError("Wykonanie nie powinno tutaj dojść");
+	}
+
+	public static int doUpdateQuery(String query) throws SQLException
+	{
+		return DBEngine.getConnection().doUpdateQueryObj(query);
+	}
+
 	protected SQLRows getAllRowsObj(String query) throws SQLException
 	{
 		Statement stmt = null;
