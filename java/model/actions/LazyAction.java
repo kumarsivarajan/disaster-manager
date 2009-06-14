@@ -15,7 +15,7 @@ public class LazyAction extends Action
 		this.id = id;
 	}
 
-	protected ActionType getType()
+	public ActionType getType()
 	{
 		throw new AssertionError("Klasa LazyAction nie obsługuje tej metody");
 	}

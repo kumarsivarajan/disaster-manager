@@ -15,7 +15,7 @@ public abstract class Action
 	protected Integer maxTime;
 	protected boolean added = false;
 
-	public static enum ActionType { ACTION_MESSAGE }
+	public static enum ActionType { ACTION_MESSAGE, ACTION_EMAIL }
 
 	private static HashMap<Integer, Action> actionCache =
 			new HashMap<Integer, Action>();
@@ -54,11 +54,53 @@ public abstract class Action
 			case ACTION_MESSAGE:
 				a = new ActionMessage(procedure);
 				break;
+			case ACTION_EMAIL:
+				a = new ActionEmail(procedure);
+				break;
 			default:
 				throw new AssertionError("Nie rozważono jednej z procedur");
 		}
 		a.save(false);
 		return a;
+	}
+
+	public static int actionTypeToInt(ActionType type)
+	{
+		switch (type)
+		{
+			case ACTION_MESSAGE:
+				return 1;
+			case ACTION_EMAIL:
+				return 2;
+			default:
+				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
+		}
+	}
+
+	public static String actionTypeToName(ActionType type)
+	{
+		switch (type)
+		{
+			case ACTION_MESSAGE:
+				return "Wiadomość dla operatora";
+			case ACTION_EMAIL:
+				return "Wiadomość email";
+			default:
+				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
+		}
+	}
+
+	public static ActionType actionTypeFromInt(int id)
+	{
+		switch (id)
+		{
+			case 1:
+				return ActionType.ACTION_MESSAGE;
+			case 2:
+				return ActionType.ACTION_EMAIL;
+			default:
+				throw new IllegalArgumentException("Nieprawidłowy id typu");
+		}
 	}
 
 	public static Action getActionFromSQL(SQLRow row) throws SQLException
@@ -81,15 +123,8 @@ public abstract class Action
 		Procedure procedure =
 				Procedure.getProcedureByID((Integer)row.get("procedure"));
 
-		Action action;
-		switch (actionTypeFromInt((Integer)row.get("type")))
-		{
-			case ACTION_MESSAGE:
-				action = new ActionMessage(procedure);
-				break;
-			default:
-				throw new AssertionError("Pominięto case");
-		}
+		Action action = createAction(procedure,
+				actionTypeFromInt((Integer)row.get("type")));
 
 		action.id = id;
 		action.label = (String)row.get("label");
@@ -190,39 +225,6 @@ public abstract class Action
 			return getActionFromSQL(DBEngine.getRow(
 					"SELECT * FROM `procedure_action` WHERE id = " + id));
 		return actionCache.get(id);
-	}
-
-	public static int actionTypeToInt(ActionType type)
-	{
-		switch (type)
-		{
-			case ACTION_MESSAGE:
-				return 1;
-			default:
-				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
-		}
-	}
-
-	public static String actionTypeToName(ActionType type)
-	{
-		switch (type)
-		{
-			case ACTION_MESSAGE:
-				return "Wiadomość dla operatora";
-			default:
-				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
-		}
-	}
-
-	public static ActionType actionTypeFromInt(int id)
-	{
-		switch (id)
-		{
-			case 1:
-				return ActionType.ACTION_MESSAGE;
-			default:
-				throw new IllegalArgumentException("Nieprawidłowy id typu");
-		}
 	}
 
 	/**
@@ -393,9 +395,9 @@ public abstract class Action
 
 	protected abstract ActionType getType();
 
-	protected abstract String getArguments();
+	protected abstract String getArguments();// to powinno być raczej przez serializację
 	
-	protected abstract void setArguments(String arguments);
+	protected abstract void setArguments(String arguments); // j/w
 
 	public abstract void doAction();
 }

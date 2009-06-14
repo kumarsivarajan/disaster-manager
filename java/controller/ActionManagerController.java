@@ -49,6 +49,21 @@ public class ActionManagerController extends Controller
 			if (maxTime > 0)
 				action.setMaxTime(maxTime);
 
+			if (action instanceof ActionMessage)
+			{
+				ActionMessage a = (ActionMessage)action;
+				a.setMessage(getParameterString("actionParam-message"));
+			}
+			else if (action instanceof ActionEmail)
+			{
+				ActionEmail a = (ActionEmail)action;
+				a.setAddresses(getParameterString("actionParam-addresses"));
+				a.setSubject(getParameterString("actionParam-subject"));
+				a.setMessage(getParameterString("actionParam-message"));
+			}
+			else
+				throw new AssertionError("Nieznany typ akcji");
+
 			action.save(true);
 			redirect("/procedureManagement/edit/" +
 					action.getProcedure().getID()
@@ -56,7 +71,20 @@ public class ActionManagerController extends Controller
 			return;
 		}
 
+		String paramForm;
+		if (action instanceof ActionMessage)
+			paramForm = "message";
+		else if (action instanceof ActionEmail)
+			paramForm = "email";
+		else
+			throw new AssertionError("Nieznany typ akcji");
+
+		TplEngine paramEngine = new TplEngine();
+		paramEngine.setVar("action", action);
+
 		tpl.setVar("action", action);
+		tpl.setVar("paramForm",
+				paramEngine.parse("actionManager-form-" + paramForm + ".ftl"));
 		tpl.display("actionManager-form.ftl");
 	}
 	

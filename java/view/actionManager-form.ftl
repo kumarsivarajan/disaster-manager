@@ -11,5 +11,14 @@
 <form action="/actionManagement/edit/${action.getID()}/" method="post">
 	<p>Etykieta: <input type="text" name="label" <#if action.getLabel()??> value="${action.getLabel()?html}" </#if> /></p>
 	<p>Ograniczenie czasu (sekundy): <input type="text" name="maxtime" <#if action.getMaxTime()??> value="${action.getMaxTime()}" </#if> /></p>
+
+	<hr />
+
+	<h3>Parametry akcji</h3>
+
+	${paramForm}
+
 	<p><input type="submit" value="Zapisz" /></p>
+	<p><a href="/procedureManagement/edit/${action.getProcedure().getID()}/">Powrót do procedury</a></p>
+
 </form>

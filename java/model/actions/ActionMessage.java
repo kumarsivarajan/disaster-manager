@@ -11,7 +11,19 @@ public class ActionMessage extends Action
 		super(procedure);
 	}
 
-	protected ActionType getType()
+	public void setMessage(String message)
+	{
+		if (message == null)
+			throw new NullPointerException();
+		this.message = message.trim();
+	}
+
+	public String getMessage()
+	{
+		return message;
+	}
+
+	public ActionType getType()
 	{
 		return ActionType.ACTION_MESSAGE;
 	}
@@ -23,7 +35,7 @@ public class ActionMessage extends Action
 
 	protected void setArguments(String arguments)
 	{
-		if (message == null)
+		if (arguments == null)
 			throw new NullPointerException();
 		message = arguments;
 	}

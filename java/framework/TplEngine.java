@@ -78,6 +78,11 @@ public class TplEngine
 		vars.put("STATICS", BeansWrapper.getDefaultInstance().getStaticModels());
 		decoratorVars.put("STATICS", BeansWrapper.getDefaultInstance().getStaticModels());
 	}
+
+	public TplEngine() throws ServletException
+	{
+		this(null, null);
+	}
 	
 	public void setVar(String var, Object value)
 	{
