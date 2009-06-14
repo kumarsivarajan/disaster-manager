@@ -1,11 +1,40 @@
 package framework;
 
+import freemarker.core.Environment;
 import freemarker.ext.beans.BeansWrapper;
 import freemarker.template.*;
 import java.io.*;
 import java.nio.charset.Charset;
 import java.util.*;
 import javax.servlet.*;
+
+class HandledTemplateException extends TemplateException
+{
+	public HandledTemplateException(String description, Exception cause, Environment env)
+	{
+		super(description, cause, env);
+	}
+}
+
+class TplEngineExceptionHandler implements TemplateExceptionHandler
+{
+	public void handleTemplateException(TemplateException te,
+		Environment env, Writer out) throws TemplateException
+	{
+		if (te instanceof HandledTemplateException)
+			throw te;
+		Exception cause = te.getCauseException();
+		if (cause == null)
+			throw te;
+		
+		String exceptionMsg = te.getMessage() + "\nOriginal exception message (" +
+				cause.getClass().getName() + "):\n" + cause.getMessage();
+
+		TemplateException newException = new HandledTemplateException(exceptionMsg, cause, env);
+		newException.setStackTrace(cause.getStackTrace());
+		throw newException;
+	}
+}
 
 //http://freemarker.org/docs/dgui.html
 public class TplEngine
@@ -40,6 +69,7 @@ public class TplEngine
 			
 			conf.setDefaultEncoding("UTF-8");
 			conf.setEncoding(Locale.getDefault(), "UTF-8");
+			conf.setTemplateExceptionHandler(new TplEngineExceptionHandler());
 		}
 		
 		this.decoratorTemplate = decoratorTemplate; // może być null

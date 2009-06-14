@@ -44,8 +44,6 @@ public class ProcedureManagerController extends Controller
 			proc.save(true);
 		}
 
-		proc.getActions();
-
 		tpl.setVar("procedure", proc);
 		tpl.display("procedureManager-form.ftl");
 	}
@@ -54,7 +52,8 @@ public class ProcedureManagerController extends Controller
 	{
 		Procedure proc = Procedure.getProcedureByID(id);
 		Procedure.delete(proc);
-		message("Procedura usunięta");
+
+		redirect("/procedureManagement/list/", RedirectType.REDIR_SEEOTHER);
 	}
 
 	public void doAction(String[] params) throws ServletException, SQLException

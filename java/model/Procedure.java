@@ -35,32 +35,31 @@ public class Procedure
 
 		if (commit)
 			added = true;
-		
+
+		SQLRow data = new SQLRow() {{
+			put("name", (name == null)?"":name);
+			put("description", (description == null)?"":description);
+			put("active", active);
+			put("added", added);
+			}};
+
 		if (id == null)
 		{
-			id = DBEngine.insert("procedure", new SQLRow() {{
-				put("name", (name == null)?"":name);
-				put("description", (description == null)?"":description);
-				put("active", active);
-				put("added", added);
-				}}, true);
-
+			id = DBEngine.insert("procedure", data, true);
 			procedureCache.put(id, this);
 		}
 		else
-		{
-			//TODO: zapis do bazy
-		}
+			DBEngine.updateByID("procedure", data, id);
 	}
 
-	public static void delete(Procedure proc) throws SQLException
+	public static synchronized void delete(Procedure proc) throws SQLException
 	{
-		//TODO: tutaj usuwanie akcji i innych powiązanych
+		Action.deleteByProcedure(proc);
 
 		DBEngine.doUpdateQuery("DELETE FROM `procedure` WHERE id = " + proc.getID());
 
 		procedureCache.remove(proc.getID());
-		
+
 		proc.id = null;
 		proc.name = proc.description = null;
 		proc.active = false;
@@ -113,13 +112,8 @@ public class Procedure
 	public static Procedure getProcedureByID(int id) throws SQLException
 	{
 		if (!procedureCache.containsKey(id))
-		{
-			//Procedure p =
 			return getProcedureFromSQL(DBEngine.getRow(
 					"SELECT * FROM `procedure` WHERE id = " + id));
-			//procedureCache.put(id, p);
-			//return p;
-		}
 			
 		return procedureCache.get(id);
 	}

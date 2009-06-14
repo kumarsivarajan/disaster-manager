@@ -14,6 +14,9 @@ abstract public class Controller
 	final protected TplEngine tpl;
 	
 	final static private String defaultContentType = "application/xhtml+xml";
+
+	protected static enum RedirectType { REDIR_MOVEDPERMA, REDIR_FOUND, REDIR_SEEOTHER };
+	//REDIR_NOTMODIFIED, REDIR_USEPROXY
 	
 	public Controller(HttpServletRequest request,
 		HttpServletResponse response) throws ServletException
@@ -114,6 +117,27 @@ abstract public class Controller
 	{
 		tpl.setVar("message", message);
 		tpl.display("_message.ftl");
+	}
+
+	protected void redirect(String url, RedirectType type)
+	{
+		if (url == null || type == null)
+			throw new NullPointerException();
+		switch (type)
+		{
+			case REDIR_MOVEDPERMA: //301
+				response.setStatus(HttpServletResponse.SC_MOVED_PERMANENTLY);
+				break;
+			case REDIR_FOUND: //302
+				response.setStatus(HttpServletResponse.SC_FOUND);
+				break;
+			case REDIR_SEEOTHER: //303
+				response.setStatus(HttpServletResponse.SC_SEE_OTHER);
+				break;
+			default:
+				throw new AssertionError("Zły typ przekierowania");
+		}
+		response.setHeader("Location", response.encodeRedirectURL(url));
 	}
 
 	/*

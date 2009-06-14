@@ -15,7 +15,7 @@ public abstract class Action
 	protected Integer maxTime;
 	protected boolean added = false;
 
-	protected static enum ActionType { ACTION_MESSAGE }
+	public static enum ActionType { ACTION_MESSAGE }
 
 	private static HashMap<Integer, Action> actionCache =
 			new HashMap<Integer, Action>();
@@ -44,6 +44,21 @@ public abstract class Action
 		if (id == null)
 			throw new NullPointerException("Nie ustawiono ID");
 		return id;
+	}
+
+	public static Action createAction(Procedure procedure, ActionType type) throws SQLException
+	{
+		Action a;
+		switch (type)
+		{
+			case ACTION_MESSAGE:
+				a = new ActionMessage(procedure);
+				break;
+			default:
+				throw new AssertionError("Nie rozważono jednej z procedur");
+		}
+		a.save(false);
+		return a;
 	}
 
 	public static Action getActionFromSQL(SQLRow row) throws SQLException
@@ -78,7 +93,9 @@ public abstract class Action
 
 		action.id = id;
 		action.label = (String)row.get("label");
-		action.nextAction = new LazyAction(procedure, (Integer)row.get("next_action"));
+		if (row.get("next_action") != null)
+			action.nextAction =
+					new LazyAction(procedure, (Integer)row.get("next_action"));
 		action.maxTime = (Integer)row.get("maxtime");
 		action.added = (Boolean)row.get("added");
 		action.setArguments((String)row.get("arguments"));
@@ -97,6 +114,12 @@ public abstract class Action
 		return out;
 	}
 
+	protected static void clearProcedureActionsCache(Procedure procedure)
+	{
+		if (procedureActionCache.containsKey(procedure.getID()))
+			procedureActionCache.remove(procedure.getID());
+	}
+
 	public static Action[] getActionsByProcedure(Procedure procedure) throws SQLException
 	{
 		if (procedure == null)
@@ -106,7 +129,8 @@ public abstract class Action
 			return procedureActionCache.get(procedure.getID());
 
 		Action[] actions = getActionsFromSQL(DBEngine.getAllRows(
-				"SELECT * FROM `procedure_action` WHERE added"));
+				"SELECT * FROM `procedure_action` WHERE (`procedure` = " +
+				procedure.getID() + ") AND added"));
 
 		if (actions.length == 0)
 		{
@@ -139,7 +163,7 @@ public abstract class Action
 			if (!actionsMap.containsKey(nextAction))
 				throw new AssertionError("Niespójność bazy danych: nie istnieje następca akcji " + id);
 			a.nextAction = actionsMap.get(nextAction);
-			rootActions.remove(nextAction);
+			rootActions.remove((Integer)nextAction);
 		}
 
 		if (rootActions.size() != 1)
@@ -213,12 +237,28 @@ public abstract class Action
 		if (id == null && added)
 			throw new AssertionError("Nie można dodawać nowych, dodanych akcji");
 
-		if (commit)
-			added = true;
-
-		if (id == null)
+		synchronized (Action.class)
 		{
-			id = DBEngine.insert("procedure", new SQLRow() {{
+			boolean clearCache = false;
+
+			if (commit)
+			{
+				if (!added)
+				{
+					Action[] procedureActions = Action.getActionsByProcedure(procedure);
+					if (procedureActions.length > 0)
+					{
+						Action lastAction = procedureActions[procedureActions.length - 1];
+						lastAction.nextAction = this;
+						lastAction.save(true);
+					}
+
+					clearCache = true;
+				}
+				added = true;
+			}
+
+			SQLRow data = new SQLRow() {{
 				put("procedure", procedure.getID());
 				put("label", (label == null)?null:getLabel());
 				put("next_action", (nextAction == null)?null:getNextAction().getID());
@@ -226,23 +266,69 @@ public abstract class Action
 				put("arguments", getArguments());
 				put("maxtime", getMaxTime());
 				put("added", added);
-				}}, true);
+				}};
 
-			//procedureCache.put(id, this);
+			if (id == null)
+			{
+				id = DBEngine.insert("procedure_action", data, true);
+				actionCache.put(id, this);
+			}
+			else
+				DBEngine.updateByID("procedure_action", data, id);
+
+			if (clearCache) //to MUSI być po update - zapytanie leci po "added"
+				clearProcedureActionsCache(procedure);
 		}
-		else
+	}
+
+	public static synchronized void delete(Action action) throws SQLException
+	{
+		Action previous = action.getPreviousAction();
+		if (previous != null)
 		{
-			//TODO: update w bazie danych
+			previous.nextAction = action.nextAction;
+			previous.save(true);
+		}
+
+		DBEngine.doUpdateQuery("DELETE FROM `procedure_action` WHERE `id` = " +
+				action.getID());
+		actionCache.remove(action.getID());
+		clearProcedureActionsCache(action.getProcedure());
+
+		action.id = null;
+		action.procedure = null;
+		action.label = null;
+		action.nextAction = null;
+		action.maxTime = null;
+		action.added = false;
+	}
+
+	public static synchronized void deleteByProcedure(Procedure procedure)
+			throws SQLException
+	{
+		DBEngine.doUpdateQuery("DELETE FROM `procedure_action` WHERE `procedure` = " +
+				procedure.getID());
+		clearProcedureActionsCache(procedure);
+
+		Action[] actions = procedure.getActions();
+		for (int i = 0; i < actions.length; i++)
+		{
+			actionCache.remove(actions[i].getID());
+			actions[i].id = null;
+			actions[i].procedure = null;
+			actions[i].label = null;
+			actions[i].nextAction = null;
+			actions[i].maxTime = null;
+			actions[i].added = false;
 		}
 	}
 
 	public void setLabel(String label)
 	{
-		if (label == null)
-			throw new NullPointerException();
-		if (label.trim().equals(""))
-			throw new IllegalArgumentException();
-		this.label = label.trim();
+		if (label == null || label.trim().equals(""))
+			this.label = null;
+		else
+			this.label = label.trim();
 	}
 
 	public String getLabel()
@@ -257,14 +343,52 @@ public abstract class Action
 		this.maxTime = maxTime;
 	}
 
-	public int getMaxTime()
+	public Integer getMaxTime()
 	{
 		return maxTime;
+	}
+
+	protected Action getPreviousAction() throws SQLException
+	{
+		if (!added)
+			return null;
+		Procedure p = this.getProcedure();
+		Action[] actions = p.getActions();
+		for (int i = 0; i < actions.length; i++)
+		{
+			if (actions[i] == this)
+			{
+				if (i == 0)
+					return null;
+				else
+					return actions[i - 1];
+			}
+			if (actions[i].getID() == this.getID())
+				throw new AssertionError("Błąd cache");
+		}
+		throw new AssertionError("Nie mogę znaleźć poprzednika");
 	}
 
 	public Action getNextAction()
 	{
 		return nextAction;
+	}
+
+	public String getTypeName()
+	{
+		return actionTypeToName(getType());
+	}
+
+	public Procedure getProcedure()
+	{
+		if (procedure == null)
+			throw new NullPointerException();
+		return procedure;
+	}
+
+	public boolean isAdded()
+	{
+		return added;
 	}
 
 	protected abstract ActionType getType();

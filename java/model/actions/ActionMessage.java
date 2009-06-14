@@ -4,7 +4,7 @@ import model.Procedure;
 
 public class ActionMessage extends Action
 {
-	protected String message;
+	protected String message = "";
 
 	public ActionMessage(Procedure procedure)
 	{

@@ -19,16 +19,18 @@
 
 <h3>Akcje</h3>
 
-<p>
+<form action="/actionManagement/add/${procedure.getID()}/" method="post">
+	<p>
 
-	<select>
-		<#list STATICS["model.actions.Action"].getActionTypes() as actionType>
-			<option value="${actionType.getFirst()}">${actionType.getSecond()}</option>
-		</#list>
-	</select>
+		<select name="type">
+			<#list STATICS["model.actions.Action"].getActionTypes() as actionType>
+				<option value="${actionType.getFirst()}">${actionType.getSecond()}</option>
+			</#list>
+		</select>
 
-	<a href="/actionManagement/add/${procedure.getID()}/">dodaj</a>
-</p>
+		<input type="submit" value="Dodaj" />
+	</p>
+</form>
 
 <table>
 	<thead>
@@ -44,9 +46,10 @@
 		<#list procedure.getActions() as action>
 			<tr>
 				<td>${action.getID()}</td>
-				<td>---</td>
-				<td><#if action.getLabel() == null>${action.getLabel()}<#else>---</#if></td>
-				<td><#if action.getMaxTime() == null>${action.getMaxTime()}s<#else>---</#if></td>
+				<td>${action.getTypeName()}</td>
+				<#-- dwa sposoby używania wartości null -->
+				<td>${action.getLabel()!"---"}</td>
+				<td><#if action.getMaxTime()??>${action.getMaxTime()}s<#else>---</#if></td>
 				<td>
 					<a href="/actionManagement/delete/${action.getID()}/">usuń</a>
 					<a href="/actionManagement/edit/${action.getID()}/">edytuj</a>

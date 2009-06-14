@@ -13,7 +13,17 @@ import java.sql.*;
  * http://www.fluffycat.com/Java/ResultSet/
  */
 import java.util.Collection;
-import java.util.HashMap;
+
+class SQLQueryException extends SQLException
+{
+	protected String query;
+
+	public SQLQueryException(SQLException source, String query)
+	{
+		super(source.getMessage() + "\nQuery: " + ((query == null)?"null":query));
+		this.query = query;
+	}
+}
 
 public class DBEngine
 {
@@ -59,23 +69,11 @@ public class DBEngine
 		}
 		catch (SQLException ex)
 		{
-			e = ex;
+			e = new SQLQueryException(ex, query);
 		}
 		finally
 		{
-			if (rs != null)
-				try
-				{
-					rs.close();
-				}
-				catch (SQLException ex) { }
-
-			if (stmt != null)
-				try
-				{
-					stmt.close();
-				}
-				catch (SQLException ex) { }
+			cleanUpStatement(stmt, rs);
 		}
 
 		if (e != null)
@@ -120,23 +118,11 @@ public class DBEngine
 		}
 		catch (SQLException ex)
 		{
-			e = ex;
+			e = new SQLQueryException(ex, query);
 		}
 		finally
 		{
-			if (rs != null)
-				try
-				{
-					rs.close();
-				}
-				catch (SQLException ex) { }
-			
-			if (stmt != null)
-				try
-				{
-					stmt.close();
-				}
-				catch (SQLException ex) { }
+			cleanUpStatement(stmt, rs);
 		}
 		
 		if (e != null)
@@ -226,22 +212,7 @@ public class DBEngine
 					getID?Statement.RETURN_GENERATED_KEYS:Statement.NO_GENERATED_KEYS);
 
 			for (int i = 0; i < sqlValues.length; i++)
-			{
-				Object v = sqlValues[i];
-				if (v == null)
-					stmt.setNull(i + 1, java.sql.Types.NULL);
-				else if (v instanceof String)
-					stmt.setString(i + 1, (String)v);
-				else if (v instanceof Integer)
-					stmt.setInt(i + 1, (Integer)v);
-				else if (v instanceof Long)
-					stmt.setLong(i + 1, (Long)v);
-				else if (v instanceof Boolean)
-					stmt.setBoolean(i + 1, (Boolean)v);
-				else
-					throw new SQLException("Nie obsługiwany typ danych");
-				//stmt.setTimestamp(i, (Timestamp)v);
-			}
+				setStatementValue(stmt, i + 1, sqlValues[i]);
 
 			stmt.executeUpdate();
 
@@ -267,23 +238,11 @@ public class DBEngine
 		}
 		catch (SQLException ex)
 		{
-			e = ex;
+			e = new SQLQueryException(ex, query);
 		}
 		finally
 		{
-			if (generatedKeys != null)
-				try
-				{
-					generatedKeys.close();
-				}
-				catch (SQLException ex) { }
-
-			if (stmt != null)
-				try
-				{
-					stmt.close();
-				}
-				catch (SQLException ex) { }
+			cleanUpStatement(stmt, generatedKeys);
 		}
 
 		if (e != null)
@@ -296,5 +255,108 @@ public class DBEngine
 			boolean getID) throws SQLException
 	{
 		return DBEngine.getConnection().insertObj(table, values, getID);
+	}
+
+	/**
+	 * Ustawia obiekt parametr zapytania
+	 *
+	 * @param stmt Zapytanie
+	 * @param paramIndex Pozycja parametru, indeksowane od 1
+	 * @param val Wartość
+	 * @throws java.sql.SQLException
+	 */
+	protected void setStatementValue(PreparedStatement stmt, int paramIndex, Object val)
+			throws SQLException
+	{
+		if (val == null)
+			stmt.setNull(paramIndex, java.sql.Types.NULL);
+		else if (val instanceof String)
+			stmt.setString(paramIndex, (String)val);
+		else if (val instanceof Integer)
+			stmt.setInt(paramIndex, (Integer)val);
+		else if (val instanceof Long)
+			stmt.setLong(paramIndex, (Long)val);
+		else if (val instanceof Boolean)
+			stmt.setBoolean(paramIndex, (Boolean)val);
+		else
+			throw new SQLException("Nie obsługiwany typ danych");
+		//stmt.setTimestamp(i, (Timestamp)v);
+	}
+
+	protected void cleanUpStatement(Statement stmt, ResultSet results)
+	{
+		if (results != null)
+			try
+			{
+				results.close();
+			}
+			catch (SQLException ex) { }
+
+		if (stmt != null)
+			try
+			{
+				stmt.close();
+			}
+			catch (SQLException ex) { }
+	}
+
+	protected void updateObj(String table, SQLRow values, String condition) throws SQLException
+	{
+		if (table == null || values == null)
+			throw new NullPointerException();
+		if (values.size() == 0)
+			throw new IllegalArgumentException("Pusta tablica uaktualnień");
+		PreparedStatement stmt = null;
+		SQLException e = null;
+
+		String query = "UPDATE `" + table + "` SET ";
+		Object[] sqlValues = new Object[values.size()];
+		int sqlVPos = 0;
+		for (String key : values.keySet())
+		{
+			if (key == null || key.trim().equals(""))
+				throw new SQLException("Zły nagłówek tabeli");
+			sqlValues[sqlVPos] = values.get(key);
+
+			query += "`" + key + "` = ?";
+			if (sqlVPos < values.size() - 1)
+				query += ", ";
+
+			sqlVPos++;
+		}
+
+		if (condition != null)
+			query += " WHERE " + condition;
+
+		try
+		{
+			stmt = conn.prepareStatement(query);
+
+			for (int i = 0; i < sqlValues.length; i++)
+				setStatementValue(stmt, i + 1, sqlValues[i]);
+
+			stmt.executeUpdate();
+		}
+		catch (SQLException ex)
+		{
+			e = new SQLQueryException(ex, query);
+		}
+		finally
+		{
+			cleanUpStatement(stmt, null);
+		}
+
+		if (e != null)
+			throw e;
+	}
+
+	protected void updateByIDObj(String table, SQLRow values, int id) throws SQLException
+	{
+		updateObj(table, values, "id = " + id);
+	}
+
+	public static void updateByID(String table, SQLRow values, int id) throws SQLException
+	{
+		DBEngine.getConnection().updateByIDObj(table, values, id);
 	}
 }
