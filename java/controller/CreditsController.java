@@ -4,10 +4,7 @@ import framework.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 
-/**
- *
- * @author Pawel
- */
+
 public class CreditsController extends Controller
 {
 	public CreditsController(HttpServletRequest request,

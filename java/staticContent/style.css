@@ -1,5 +1,5 @@
-mainmenuhtml, body {
-	background-color: #fff;
+html, body {
+	background-color: #dfd;
 	color: #000;
 	margin: 0;
 	padding: 0;
@@ -30,7 +30,7 @@ mainmenuhtml, body {
 	font-size: 15px;
 	margin-left: 180px;
 	margin-right: 150px;
-	background-color: #fff;
+	/*background-color: #dfd;*/
 }
 
 #FEET {
@@ -68,6 +68,5 @@ ul#mainmenu a:link, ul#mainmenu a:visited {
 
 ul#mainmenu a:hover {
 	background-color: #686;
-	
-	color:#365;
+	color: #ccc;
 }
