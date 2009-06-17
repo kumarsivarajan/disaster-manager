@@ -1,80 +1,63 @@
+
 package model.actions;
 
-import java.util.Vector;
+import java.io.IOException;
 import model.Procedure;
-import tools.StringTools;
+import java.net.*;
 
 public class ActionSMS extends Action
 {
-	protected Long[] recipients = new Long[0];
-	protected String message = "";
+	protected String number;
+	protected String message;
+    protected static String from = "DisManager"; // max 11 znaków
 
-	public ActionSMS(Procedure procedure)
+	protected static String requestUrl = "http://sms.wadja.com/partners/sms/default.aspx" +
+			"?key=%s&msg=%s&to=%s&from=%s&send=%d&unicode=%s/";
+	protected static String key = "21FA03E3F080";
+
+	protected static int send = 1;
+	protected static String unicode = "no";
+
+
+	public ActionSMS(Procedure procedure) 
 	{
 		super(procedure);
 	}
 
-	public void setRecipients(String recipients)
+	public ActionType getType() { return ActionType.ACTION_SMS; }
+	
+	public String getArguments()
 	{
-		if (recipients == null)
-			throw new NullPointerException();
-		recipients = recipients.replace('\n', ' ');
-		recipients = recipients.replace(',', ' ').trim();
-		String[] recipientsRAW = recipients.split(" ");
-		Vector<Long> recipientsV = new Vector<Long>();
-		for (String recipient : recipientsRAW)
-		{
-			if (recipient.equals(""))
-				continue;
-			try
-			{
-				recipientsV.add(Long.parseLong(recipient));
-			}
-			catch (NumberFormatException e)
-			{
-			}
-		}
-		this.recipients = recipientsV.toArray(new Long[0]);
+		return number + "\n" + message;
 	}
 
-	public String getRecipients()
-	{
-		return StringTools.join(", ", recipients);
-	}
-
-	public void setMessage(String message)
-	{
-		if (message == null)
-			throw new NullPointerException();
-		this.message = message.trim();
-	}
-
-	public String getMessage()
-	{
-		return message;
-	}
-
-	public ActionType getType()
-	{
-		return ActionType.ACTION_SMS;
-	}
-
-	protected String getArguments()
-	{
-		return getRecipients() + "\n" + getMessage();
-	}
-
-	protected void setArguments(String arguments)
+	public void setArguments(String arguments)
 	{
 		if (arguments == null)
 			throw new NullPointerException();
-		String[] args = (arguments + "\n\n").split("\n", 3);
-		setRecipients(args[0].trim());
-		setMessage(args[1].trim());
+		String[] args = (arguments + "\n\n").split("\n",2);
+		number = args[0].trim();
+	    message = args[1].trim();
 	}
 
-	public void doAction()
+	public void doAction() throws ActionException
 	{
-		//TODO: wykonanie akcji
+		if (number == null)
+			throw new ActionException("Błąd wysyłania SMS. Brak adresata.");
+		if (message == null)
+			throw new ActionException("Błąd wysyłania SMS. Brak treści wiadomości.");
+
+		try
+		{
+			URL url = new URL(String.format(requestUrl, key, message, number, from,
+						send, unicode).replaceAll(" ", "%20"));
+			url.getContent();
+		}
+		catch (IOException ex)
+		{
+			throw new ActionException(ex.getMessage());
+		}
+
+
 	}
 }

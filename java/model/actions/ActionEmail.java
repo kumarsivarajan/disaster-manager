@@ -2,7 +2,16 @@ package model.actions;
 
 import java.util.Vector;
 import model.Procedure;
+import java.lang.System;
 import tools.StringTools;
+import java.util.*;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
 
 public class ActionEmail extends Action
 {
@@ -10,15 +19,21 @@ public class ActionEmail extends Action
 	protected String subject = "";
 	protected String message = "";
 
+	protected String from = "disaster@manager.pl";
+	protected String host = "localhost";
+	protected int port = 25;
+	protected String login = "dmanager";
+	protected String password = "disastermanager1";
+
 	public ActionEmail(Procedure procedure)
 	{
 		super(procedure);
 	}
 
 	/**
-	 * Ustaw odbiorc贸w emaila
+	 * Ustaw odbiorc體 emaila
 	 *
-	 * @param addresses Adresy email odbiorc贸w, oddzielone spacjami albo przecinkami
+	 * @param addresses Adresy email odbiorc體, oddzielone spacjami albo przecinkami
 	 */
 	public void setAddresses(String addresses)
 	{
@@ -38,9 +53,9 @@ public class ActionEmail extends Action
 	}
 
 	/**
-	 * Pobiera odbiorc贸w emaila
+	 * Pobiera odbiorc體 emaila
 	 *
-	 * @return Adresy email odbiorc贸w, oddzielone przecinkami
+	 * @return Adresy email odbiorc體, oddzielone przecinkami
 	 */
 	public String getAddresses()
 	{
@@ -92,8 +107,38 @@ public class ActionEmail extends Action
 		setMessage(args[2].trim());
 	}
 
-	public void doAction()
+	public void doAction() throws ActionException
 	{
-		//TODO: wykonanie akcji
+		try {
+			Properties prop = System.getProperties();
+			prop.put("mail.host", host);
+			prop.put("mail.from", from);
+			prop.put("mail.user", login);
+			prop.put("mail.password", password);
+			prop.put("mail.port", port);
+			Session session = Session.getDefaultInstance(prop);
+			MimeMessage letter = new MimeMessage(session);
+			letter.setFrom(new InternetAddress(from));
+			
+			String[] many_addresses = addresses.split(" ");
+			letter.addRecipient(RecipientType.TO, new InternetAddress(many_addresses[0]));
+		
+			letter.setSubject(subject);
+				
+			letter.setText(message);
+		
+			for (int i = 1; i < many_addresses.length; i++)
+			{
+				letter.addRecipient(RecipientType.CC, new InternetAddress(many_addresses[i]));
+			}
+			/*
+			Transport transport = session.getTransport("smtp");
+
+			transport.connect(host, port, login, password);
+			transport.sendMessage(letter, letter.getAllRecipients());
+			*/
+			Transport.send(letter);
+		}	
+		catch (MessagingException e) {throw new ActionException("Messaging: "+e.getMessage());}
 	}
 }
