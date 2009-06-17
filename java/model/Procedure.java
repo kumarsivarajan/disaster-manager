@@ -189,9 +189,18 @@ public class Procedure
 		return actions[0];
 	}
 
+	protected synchronized ProcedureExecution getExecution()
+	{
+		if (execution == null)
+			return null;
+		if (execution.isShuttedDown())
+			execution = null;
+		return execution;
+	}
+
 	public synchronized boolean execute() throws SQLException
 	{
-		if (execution != null)
+		if (getExecution() != null)
 			return false;
 		execution = new ProcedureExecution(this);
 		execution.start();
@@ -200,20 +209,20 @@ public class Procedure
 
 	public boolean hasExecution()
 	{
-		return (execution != null);
+		return (getExecution() != null);
 	}
 
 	public synchronized void stopExecution()
 	{
 		if (!hasExecution())
 			return;
-		execution.shutdown();
+		getExecution().shutdown();
 	}
 
 	public synchronized boolean isExecutionShuttingDown()
 	{
 		if (!hasExecution())
 			return false;
-		return execution.isShuttingDown();
+		return getExecution().isShuttingDown();
 	}
 }

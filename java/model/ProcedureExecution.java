@@ -19,6 +19,9 @@ public class ProcedureExecution
 			{
 				setErrorMessage("SQLException: " + e.getMessage());
 			}
+
+			saveErrorMessage();
+			shuttedDown = true;
 		}
 	}
 
@@ -28,6 +31,7 @@ public class ProcedureExecution
 
 	private String errorMessage;
 	private boolean shuttingDown = false;
+	private boolean shuttedDown = false;
 
 	public ProcedureExecution(Procedure procedure) throws SQLException
 	{
@@ -64,7 +68,7 @@ public class ProcedureExecution
 			long start = System.currentTimeMillis() / 1000;
 			currentAction.doAction(this);
 			long time = (System.currentTimeMillis() / 1000) - start;
-			currentAction.logExecution(this, order, time);
+			currentAction.logExecution(this, ++order, time);
 			currentAction = currentAction.getNextAction();
 		}
 	}
@@ -76,28 +80,48 @@ public class ProcedureExecution
 		errorMessage = message;
 	}
 
-	protected synchronized void saveErrorMessage() throws SQLException
+	protected synchronized void saveErrorMessage()
 	{
 		if (errorMessage == null)
 			return;
-		DBEngine.updateByID("report", new SQLRow() {{
-			put("error", errorMessage);
-			}}, id);
+		try
+		{
+			DBEngine.updateByID("report", new SQLRow() {{
+				put("error", errorMessage);
+				}}, id);
+		}
+		catch (SQLException e)
+		{
+			
+		}
 	}
 
 	public void start()
 	{
+		if (shuttingDown || shuttedDown || thread.isAlive())
+			throw new AssertionError("Próba ponownego wystartowania procedury");
 		thread.start();
 	}
 
 	public void shutdown()
 	{
-		shuttingDown = true;
+		synchronized (this)
+		{
+			if (shuttingDown)
+				return;
+			shuttingDown = true;
+			setErrorMessage("zatrzymano");
+		}
 		thread.interrupt();
 	}
 
 	public boolean isShuttingDown()
 	{
 		return shuttingDown;
+	}
+
+	public boolean isShuttedDown()
+	{
+		return shuttedDown;
 	}
 }

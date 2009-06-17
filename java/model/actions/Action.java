@@ -420,7 +420,7 @@ public abstract class Action
 		DBEngine.insert("report_action", new SQLRow() {{
 			put("report", procExec.getID());
 			put("order", order);
-			put("type", getType());
+			put("type", actionTypeToInt(getType()));
 			put("arguments", getArguments());
 			put("maxtime", getMaxTime());
 			put("usedtime", usedTime);
