@@ -54,7 +54,7 @@ abstract public class Controller
 		{
 			SimpleHash button = new SimpleHash();
 			button.put("url", "/");
-			button.put("caption", "Strona Główna");
+			button.put("caption", "O programie");
 			menu.add(button);
 		}
 		{
@@ -67,12 +67,6 @@ abstract public class Controller
 			SimpleHash button = new SimpleHash();
 			button.put("url", "/procedureExecution/list/");
 			button.put("caption", "Procedury");
-			menu.add(button);
-		}
-		{
-			SimpleHash button = new SimpleHash();
-			button.put("url", "/credits/");
-			button.put("caption", "O programie");
 			menu.add(button);
 		}
 
