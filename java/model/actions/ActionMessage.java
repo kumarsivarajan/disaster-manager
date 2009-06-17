@@ -30,14 +30,14 @@ public class ActionMessage extends Action
 
 	protected String getArguments()
 	{
-		return message;
+		return getMessage();
 	}
 
 	protected void setArguments(String arguments)
 	{
 		if (arguments == null)
 			throw new NullPointerException();
-		message = arguments;
+		setMessage(arguments);
 	}
 
 	public void doAction()

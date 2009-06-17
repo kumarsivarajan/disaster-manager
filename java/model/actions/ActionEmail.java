@@ -1,10 +1,12 @@
 package model.actions;
 
+import java.util.Vector;
 import model.Procedure;
+import tools.StringTools;
 
 public class ActionEmail extends Action
 {
-	protected String addresses = "";
+	protected String[] addresses = new String[0];
 	protected String subject = "";
 	protected String message = "";
 
@@ -13,17 +15,36 @@ public class ActionEmail extends Action
 		super(procedure);
 	}
 
+	/**
+	 * Ustaw odbiorców emaila
+	 *
+	 * @param addresses Adresy email odbiorców, oddzielone spacjami albo przecinkami
+	 */
 	public void setAddresses(String addresses)
 	{
 		if (addresses == null)
 			throw new NullPointerException();
 		addresses = addresses.replace('\n', ' ');
-		this.addresses = addresses.trim();
+		addresses = addresses.replace(',', ' ').trim();
+		String[] addressesRAW = addresses.split(" ");
+		Vector<String> addressesV = new Vector<String>();
+		for (String address : addressesRAW)
+		{
+			if (address.equals(""))
+				continue;
+			addressesV.add(address);
+		}
+		this.addresses = addressesV.toArray(new String[0]);
 	}
 
+	/**
+	 * Pobiera odbiorców emaila
+	 *
+	 * @return Adresy email odbiorców, oddzielone przecinkami
+	 */
 	public String getAddresses()
 	{
-		return addresses;
+		return StringTools.join(", ", addresses);
 	}
 
 	public void setSubject(String subject)
@@ -58,7 +79,7 @@ public class ActionEmail extends Action
 
 	protected String getArguments()
 	{
-		return addresses + "\n" + subject + "\n" + message;
+		return getAddresses() + "\n" + getSubject() + "\n" + getMessage();
 	}
 
 	protected void setArguments(String arguments)
@@ -66,9 +87,9 @@ public class ActionEmail extends Action
 		if (arguments == null)
 			throw new NullPointerException();
 		String[] args = (arguments + "\n\n").split("\n", 3);
-		addresses = args[0].trim();
-		subject = args[1].trim();
-		message = args[2].trim();
+		setAddresses(args[0].trim());
+		setSubject(args[1].trim());
+		setMessage(args[2].trim());
 	}
 
 	public void doAction()

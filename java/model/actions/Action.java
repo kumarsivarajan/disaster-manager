@@ -15,7 +15,8 @@ public abstract class Action
 	protected Integer maxTime;
 	protected boolean added = false;
 
-	public static enum ActionType { ACTION_MESSAGE, ACTION_EMAIL }
+	public static enum ActionType {
+		ACTION_MESSAGE, ACTION_EMAIL, ACTION_XMPP_RECEIVE, ACTION_SMS }
 
 	private static HashMap<Integer, Action> actionCache =
 			new HashMap<Integer, Action>();
@@ -57,6 +58,12 @@ public abstract class Action
 			case ACTION_EMAIL:
 				a = new ActionEmail(procedure);
 				break;
+			case ACTION_XMPP_RECEIVE:
+				a = new ActionXmppReceive(procedure);
+				break;
+			case ACTION_SMS:
+				a = new ActionSMS(procedure);
+				break;
 			default:
 				throw new AssertionError("Nie rozważono jednej z procedur");
 		}
@@ -72,6 +79,10 @@ public abstract class Action
 				return 1;
 			case ACTION_EMAIL:
 				return 2;
+			case ACTION_XMPP_RECEIVE:
+				return 3;
+			case ACTION_SMS:
+				return 4;
 			default:
 				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
 		}
@@ -85,6 +96,10 @@ public abstract class Action
 				return "Wiadomość dla operatora";
 			case ACTION_EMAIL:
 				return "Wiadomość email";
+			case ACTION_XMPP_RECEIVE:
+				return "Odczytanie wiadomości XMPP";
+			case ACTION_SMS:
+				return "Wiadomość SMS";
 			default:
 				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
 		}
@@ -98,6 +113,10 @@ public abstract class Action
 				return ActionType.ACTION_MESSAGE;
 			case 2:
 				return ActionType.ACTION_EMAIL;
+			case 3:
+				return ActionType.ACTION_XMPP_RECEIVE;
+			case 4:
+				return ActionType.ACTION_SMS;
 			default:
 				throw new IllegalArgumentException("Nieprawidłowy id typu");
 		}

@@ -33,8 +33,9 @@ public class ActionManagerController extends Controller
 
 		Action action = Action.createAction(proc, type);
 
-		tpl.setVar("action", action);
-		tpl.display("actionManager-form.ftl");
+		redirect("/actionManagement/edit/" +
+				action.getID()
+				+ "/", RedirectType.REDIR_SEEOTHER);
 	}
 
 	private void editAction(int id) throws ServletException, SQLException
@@ -61,6 +62,16 @@ public class ActionManagerController extends Controller
 				a.setSubject(getParameterString("actionParam-subject"));
 				a.setMessage(getParameterString("actionParam-message"));
 			}
+			else if (action instanceof ActionXmppReceive)
+			{
+				//TODO
+			}
+			else if (action instanceof ActionSMS)
+			{
+				ActionSMS a = (ActionSMS)action;
+				a.setRecipients(getParameterString("actionParam-recipients"));
+				a.setMessage(getParameterString("actionParam-message"));
+			}
 			else
 				throw new AssertionError("Nieznany typ akcji");
 
@@ -76,6 +87,10 @@ public class ActionManagerController extends Controller
 			paramForm = "message";
 		else if (action instanceof ActionEmail)
 			paramForm = "email";
+		else if (action instanceof ActionXmppReceive)
+			paramForm = "xmppReceive";
+		else if (action instanceof ActionSMS)
+			paramForm = "sms";
 		else
 			throw new AssertionError("Nieznany typ akcji");
 
