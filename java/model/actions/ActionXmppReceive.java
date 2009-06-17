@@ -1,6 +1,6 @@
 package model.actions;
 
-import model.Procedure;
+import model.*;
 
 public class ActionXmppReceive extends Action
 {
@@ -26,7 +26,7 @@ public class ActionXmppReceive extends Action
 			throw new NullPointerException();
 	}
 
-	public void doAction()
+	public void doAction(ProcedureExecution procExec)
 	{
 		//TODO: wykonanie akcji
 		try
@@ -35,7 +35,8 @@ public class ActionXmppReceive extends Action
 		}
 		catch (InterruptedException e)
 		{
-			return;
+			if (procExec.isShuttingDown())
+				return;
 		}
 	}
 }

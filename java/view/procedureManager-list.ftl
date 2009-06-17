@@ -8,7 +8,7 @@
 			<th>ID</th>
 			<th>Nazwa</th>
 			<th>Aktywna</th>
-			<th>Edycja</th>
+			<th>Akcje</th>
 		</tr>
 	</thead>
 	<tbody>

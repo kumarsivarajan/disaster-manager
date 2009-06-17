@@ -3,7 +3,7 @@ package model.actions;
 import framework.*;
 import java.sql.SQLException;
 import java.util.*;
-import model.Procedure;
+import model.*;
 import tools.Pair;
 
 public abstract class Action
@@ -412,11 +412,26 @@ public abstract class Action
 		return added;
 	}
 
+	public void logExecution(final ProcedureExecution procExec, final int order,
+			final long usedTime) throws SQLException
+	{
+		if (procExec == null)
+			throw new NullPointerException();
+		DBEngine.insert("report_action", new SQLRow() {{
+			put("report", procExec.getID());
+			put("order", order);
+			put("type", getType());
+			put("arguments", getArguments());
+			put("maxtime", getMaxTime());
+			put("usedtime", usedTime);
+			}},false);
+	}
+
 	protected abstract ActionType getType();
 
 	protected abstract String getArguments();// to powinno być raczej przez serializację
 	
 	protected abstract void setArguments(String arguments); // j/w
 
-	public abstract void doAction();
+	public abstract void doAction(ProcedureExecution procExec);
 }

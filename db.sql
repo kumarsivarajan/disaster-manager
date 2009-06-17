@@ -61,7 +61,7 @@ CREATE TABLE `procedure_action` (
   `added` tinyint(1) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -75,6 +75,7 @@ CREATE TABLE `report` (
   `procedure` smallint(5) unsigned NOT NULL COMMENT 'może odnosić się do usuniętej procedury',
   `procedure_name` varchar(128) collate utf8_polish_ci NOT NULL COMMENT 'na wypadek, gdyby procedurę usunięto',
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'data rozpoczęcia testu',
+  `error` varchar(255) collate utf8_polish_ci default NULL COMMENT 'ewentualny komunikat błędu',
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
@@ -91,8 +92,11 @@ CREATE TABLE `report_action` (
   `order` smallint(5) unsigned NOT NULL COMMENT 'która w kolei została wykonana ta akcja',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'patrz procedure_action',
   `arguments` text collate utf8_polish_ci NOT NULL COMMENT 'patrz procedure_action',
+  `maxtime` mediumint(8) unsigned default NULL,
+  `usedtime` mediumint(8) unsigned NOT NULL COMMENT 'czas działania akcji',
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`),
+  UNIQUE KEY `report_order` (`report`,`order`),
   KEY `report` (`report`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 

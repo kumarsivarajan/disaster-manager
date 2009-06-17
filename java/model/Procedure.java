@@ -3,7 +3,6 @@ package model;
 import framework.*;
 import java.sql.SQLException;
 import java.util.HashMap;
-import javax.servlet.ServletException;
 import model.actions.Action;
 
 public class Procedure
@@ -13,6 +12,8 @@ public class Procedure
 	protected String description;
 	protected boolean active = true;
 	protected boolean added = false;
+
+	protected ProcedureExecution execution;
 
 	protected static HashMap<Integer, Procedure> procedureCache =
 			new HashMap<Integer, Procedure>();
@@ -178,5 +179,41 @@ public class Procedure
 	public Action[] getActions() throws SQLException
 	{
 		return Action.getActionsByProcedure(this);
+	}
+
+	public Action getFirstAction() throws SQLException
+	{
+		Action[] actions = getActions();
+		if (actions.length == 0)
+			return null;
+		return actions[0];
+	}
+
+	public synchronized boolean execute() throws SQLException
+	{
+		if (execution != null)
+			return false;
+		execution = new ProcedureExecution(this);
+		execution.start();
+		return true;
+	}
+
+	public boolean hasExecution()
+	{
+		return (execution != null);
+	}
+
+	public synchronized void stopExecution()
+	{
+		if (!hasExecution())
+			return;
+		execution.shutdown();
+	}
+
+	public synchronized boolean isExecutionShuttingDown()
+	{
+		if (!hasExecution())
+			return false;
+		return execution.isShuttingDown();
 	}
 }

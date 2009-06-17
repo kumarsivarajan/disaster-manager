@@ -1,6 +1,6 @@
 package model.actions;
 
-import model.Procedure;
+import model.*;
 
 public class ActionMessage extends Action
 {
@@ -40,7 +40,7 @@ public class ActionMessage extends Action
 		setMessage(arguments);
 	}
 
-	public void doAction()
+	public void doAction(ProcedureExecution procExec)
 	{
 		//TODO: wykonanie akcji
 	}

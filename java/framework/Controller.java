@@ -60,6 +60,12 @@ abstract public class Controller
 		{
 			SimpleHash button = new SimpleHash();
 			button.put("url", "/procedureManagement/list/");
+			button.put("caption", "Zarządzanie procedurami");
+			menu.add(button);
+		}
+		{
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/procedureExecution/list/");
 			button.put("caption", "Procedury");
 			menu.add(button);
 		}

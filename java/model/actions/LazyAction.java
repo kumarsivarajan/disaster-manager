@@ -1,6 +1,6 @@
 package model.actions;
 
-import model.Procedure;
+import model.*;
 
 /**
  * Klasa tymczasowych obiektów, wskazujących następną akcję
@@ -30,7 +30,7 @@ public class LazyAction extends Action
 		throw new AssertionError("Klasa LazyAction nie obsługuje tej metody");
 	}
 
-	public void doAction()
+	public void doAction(ProcedureExecution procExec)
 	{
 		throw new AssertionError("Klasa LazyAction nie obsługuje tej metody");
 	}
