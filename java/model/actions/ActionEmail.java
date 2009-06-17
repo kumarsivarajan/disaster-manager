@@ -1,17 +1,17 @@
 package model.actions;
 
-import java.util.Vector;
-import model.Procedure;
-import java.lang.System;
+import model.*;
 import tools.StringTools;
 import java.util.*;
+
+/*
 import javax.mail.Message.RecipientType;
 import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-
+*/
 
 public class ActionEmail extends Action
 {
@@ -19,11 +19,11 @@ public class ActionEmail extends Action
 	protected String subject = "";
 	protected String message = "";
 
-	protected String from = "disaster@manager.pl";
-	protected String host = "localhost";
-	protected int port = 25;
-	protected String login = "dmanager";
-	protected String password = "disastermanager1";
+	protected final static String from = "disaster@manager.pl";
+	protected final static String host = "localhost";
+	protected final static int port = 25;
+	protected final static String login = "dmanager";
+	protected final static String password = "disastermanager1";
 
 	public ActionEmail(Procedure procedure)
 	{
@@ -31,9 +31,9 @@ public class ActionEmail extends Action
 	}
 
 	/**
-	 * Ustaw odbiorc體 emaila
+	 * Ustaw odbiorc贸w emaila
 	 *
-	 * @param addresses Adresy email odbiorc體, oddzielone spacjami albo przecinkami
+	 * @param addresses Adresy email odbiorc贸w, oddzielone spacjami albo przecinkami
 	 */
 	public void setAddresses(String addresses)
 	{
@@ -53,9 +53,9 @@ public class ActionEmail extends Action
 	}
 
 	/**
-	 * Pobiera odbiorc體 emaila
+	 * Pobiera odbiorc贸w emaila
 	 *
-	 * @return Adresy email odbiorc體, oddzielone przecinkami
+	 * @return Adresy email odbiorc贸w, oddzielone przecinkami
 	 */
 	public String getAddresses()
 	{
@@ -107,9 +107,11 @@ public class ActionEmail extends Action
 		setMessage(args[2].trim());
 	}
 
-	public void doAction() throws ActionException
+	public void doAction(ProcedureExecution procExec)// throws ActionException
 	{
-		try {
+		/*
+		try
+		{
 			Properties prop = System.getProperties();
 			prop.put("mail.host", host);
 			prop.put("mail.from", from);
@@ -131,14 +133,18 @@ public class ActionEmail extends Action
 			{
 				letter.addRecipient(RecipientType.CC, new InternetAddress(many_addresses[i]));
 			}
-			/*
+			/ *
 			Transport transport = session.getTransport("smtp");
 
 			transport.connect(host, port, login, password);
 			transport.sendMessage(letter, letter.getAllRecipients());
-			*/
+			* /
 			Transport.send(letter);
 		}	
-		catch (MessagingException e) {throw new ActionException("Messaging: "+e.getMessage());}
+		catch (MessagingException e)
+		{
+			throw new ActionException("Messaging: "+e.getMessage());
+		}
+		*/
 	}
 }
