@@ -69,6 +69,12 @@ abstract public class Controller
 			button.put("caption", "Procedury");
 			menu.add(button);
 		}
+		{
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/reports/list/");
+			button.put("caption", "Raporty");
+			menu.add(button);
+		}
 
 		tpl.setDecoratorVar("menubuttons", menu);
 	}

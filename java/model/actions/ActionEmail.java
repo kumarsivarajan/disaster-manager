@@ -92,7 +92,7 @@ public class ActionEmail extends Action
 		return ActionType.ACTION_EMAIL;
 	}
 
-	protected String getArguments()
+	public String getArguments()
 	{
 		return getAddresses() + "\n" + getSubject() + "\n" + getMessage();
 	}

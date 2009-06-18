@@ -412,24 +412,9 @@ public abstract class Action
 		return added;
 	}
 
-	public void logExecution(final ProcedureExecution procExec, final int order,
-			final long usedTime) throws SQLException
-	{
-		if (procExec == null)
-			throw new NullPointerException();
-		DBEngine.insert("report_action", new SQLRow() {{
-			put("report", procExec.getID());
-			put("order", order);
-			put("type", actionTypeToInt(getType()));
-			put("arguments", getArguments());
-			put("maxtime", getMaxTime());
-			put("usedtime", usedTime);
-			}},false);
-	}
+	public abstract ActionType getType();
 
-	protected abstract ActionType getType();
-
-	protected abstract String getArguments();// to powinno być raczej przez serializację
+	public abstract String getArguments();// to powinno być raczej przez serializację
 	
 	protected abstract void setArguments(String arguments); // j/w
 

@@ -28,7 +28,7 @@ public class ActionMessage extends Action
 		return ActionType.ACTION_MESSAGE;
 	}
 
-	protected String getArguments()
+	public String getArguments()
 	{
 		return getMessage();
 	}

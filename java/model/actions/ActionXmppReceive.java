@@ -15,7 +15,7 @@ public class ActionXmppReceive extends Action
 		return ActionType.ACTION_XMPP_RECEIVE;
 	}
 
-	protected String getArguments()
+	public String getArguments()
 	{
 		return "";
 	}

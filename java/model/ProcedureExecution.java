@@ -1,7 +1,5 @@
 package model;
 
-import framework.DBEngine;
-import framework.SQLRow;
 import java.sql.SQLException;
 import model.actions.Action;
 
@@ -17,82 +15,52 @@ public class ProcedureExecution
 			}
 			catch (SQLException e)
 			{
-				setErrorMessage("SQLException: " + e.getMessage());
+				report.setErrorMessage("SQLException: " + e.getMessage());
 			}
 
-			saveErrorMessage();
+			report.saveErrorMessage();
 			shuttedDown = true;
 		}
 	}
 
-	protected final Procedure proc;
+	protected final Procedure procedure;
 	private final ProcedureExecutionThread thread;
-	private final int id;
 
-	private String errorMessage;
 	private boolean shuttingDown = false;
 	private boolean shuttedDown = false;
+	private ExecutionReport report;
 
 	public ProcedureExecution(Procedure procedure) throws SQLException
 	{
 		if (procedure == null)
 			throw new NullPointerException();
 		
-		this.proc = procedure;
+		this.procedure = procedure;
 		this.thread = new ProcedureExecutionThread();
-
-		id = DBEngine.insert("report", new SQLRow() {{
-			put("test", false);
-			put("procedure", proc.getID());
-			put("procedure_name", proc.getName());
-			}}, true);
+		this.report = ExecutionReport.makeNewReport(this);
 	}
 
-	public int getID()
+	public Procedure getProcedure()
 	{
-		return id;
+		return procedure;
 	}
 
 	protected void execution() throws SQLException
 	{
-		Action currentAction = proc.getFirstAction();
+		Action currentAction = getProcedure().getFirstAction();
 		if (currentAction == null)
 		{
-			setErrorMessage("Brak akcji");
+			report.setErrorMessage("Brak akcji");
 			return;
 		}
 
-		int order = 0;
 		while (currentAction != null)
 		{
 			long start = System.currentTimeMillis() / 1000;
 			currentAction.doAction(this);
 			long time = (System.currentTimeMillis() / 1000) - start;
-			currentAction.logExecution(this, ++order, time);
+			report.logActionExecution(currentAction, time);
 			currentAction = currentAction.getNextAction();
-		}
-	}
-
-	protected synchronized void setErrorMessage(String message)
-	{
-		if (message == null)
-			throw new NullPointerException();
-		errorMessage = message;
-	}
-
-	protected synchronized void saveErrorMessage()
-	{
-		if (errorMessage == null)
-			return;
-		try
-		{
-			DBEngine.updateByID("report", new SQLRow() {{
-				put("error", errorMessage);
-				}}, id);
-		}
-		catch (SQLException e)
-		{
-			
 		}
 	}
 
@@ -110,7 +78,7 @@ public class ProcedureExecution
 			if (shuttingDown)
 				return;
 			shuttingDown = true;
-			setErrorMessage("zatrzymano");
+			report.setErrorMessage("zatrzymano");
 		}
 		thread.interrupt();
 	}

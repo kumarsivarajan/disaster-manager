@@ -16,7 +16,7 @@ public class ProcedureExecutionController extends Controller
 
 	private void listAction() throws ServletException, SQLException
 	{
-		Procedure[] procedures = Procedure.getAllProcedures();
+		Procedure[] procedures = Procedure.getAllProcedures(true);
 		tpl.setVar("procedures", procedures);
 		tpl.display("procedureExecution-list.ftl");
 	}

@@ -1,11 +1,13 @@
-html, body {
+html, body
+{
 	background-color: #dfd;
 	color: #000;
 	margin: 0;
 	padding: 0;
 }
 
-#TOP {
+#TOP
+{
 	font-family: 'Trebuchet MS', Verdana, sans-serif;
 	font-size: 80px;
 	color: #ccc;
@@ -15,7 +17,8 @@ html, body {
 	background-position: right;
 }
 
-#MENU {
+#MENU
+{
 	width: 170px;
 	float: left;
 	overflow: hidden;
@@ -25,7 +28,8 @@ html, body {
 	font-size: 20px;
 }
 
-#MAIN{
+#MAIN
+{
 	font-family: 'Trebuchet MS', Verdana, sans-serif;
 	font-size: 15px;
 	margin-left: 180px;
@@ -33,20 +37,23 @@ html, body {
 	/*background-color: #dfd;*/
 }
 
-#FEET {
+#FEET
+{
 	clear: both;
 	background-color: #686;
 	height: 15px;
 }
 
-ul#mainmenu, ul li.menuitem {
+ul#mainmenu, ul li.menuitem
+{
 	display: block;
 	list-style: none;
 	margin: 0;
 	padding: 0;
 }
 
-ul li.menuitem {
+ul li.menuitem
+{
 	width: 190px;
 	padding-left: 10px;
 	background: #686;
@@ -55,7 +62,8 @@ ul li.menuitem {
 	border-color: #dfe #365 #365 #dfe;
 }
 
-ul#mainmenu a:link, ul#mainmenu a:visited {
+ul#mainmenu a:link, ul#mainmenu a:visited
+{
 	display: block;
 	width: 169px;
 	text-decoration: none;
@@ -66,7 +74,13 @@ ul#mainmenu a:link, ul#mainmenu a:visited {
 	border-left: 1px solid #686;
 }
 
-ul#mainmenu a:hover {
+ul#mainmenu a:hover
+{
 	background-color: #686;
 	color: #ccc;
+}
+
+td.warning
+{
+	color: red;
 }

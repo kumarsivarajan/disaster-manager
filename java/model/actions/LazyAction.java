@@ -20,7 +20,7 @@ public class LazyAction extends Action
 		throw new AssertionError("Klasa LazyAction nie obsługuje tej metody");
 	}
 
-	protected String getArguments()
+	public String getArguments()
 	{
 		throw new AssertionError("Klasa LazyAction nie obsługuje tej metody");
 	}

@@ -104,10 +104,12 @@ public class Procedure
 		return out;
 	}
 
-	public static Procedure[] getAllProcedures() throws SQLException
+	public static Procedure[] getAllProcedures(boolean onlyActive) throws SQLException
 	{
 		return getProceduresFromSQL(DBEngine.getAllRows(
-				"SELECT * FROM `procedure` WHERE added ORDER BY active DESC, id ASC"));
+				"SELECT * FROM `procedure` WHERE added " +
+				(onlyActive?" AND active ":"") +
+				" ORDER BY active DESC, id ASC"));
 	}
 
 	public static Procedure getProcedureByID(int id) throws SQLException
@@ -201,6 +203,8 @@ public class Procedure
 	public synchronized boolean execute() throws SQLException
 	{
 		if (getExecution() != null)
+			return false;
+		if (!isActive())
 			return false;
 		execution = new ProcedureExecution(this);
 		execution.start();

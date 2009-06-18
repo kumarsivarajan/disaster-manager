@@ -71,7 +71,7 @@ public class ActionSMS extends Action
 		return ActionType.ACTION_SMS;
 	}
 	
-	protected String getArguments()
+	public String getArguments()
 	{
 		return getRecipients() + "\n" + getMessage();
 	}
