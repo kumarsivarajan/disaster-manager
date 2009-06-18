@@ -3,6 +3,7 @@ package model;
 import framework.*;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.util.HashMap;
 import model.actions.Action;
 
 public class ExecutionReport
@@ -15,15 +16,24 @@ public class ExecutionReport
 	private String procedureName;
 	private Timestamp date;
 
-	private ExecutionReport(final ProcedureExecution execution, int id)
+	private static HashMap<Integer, ProcedureExecution> executions =
+			new HashMap<Integer, ProcedureExecution>();
+
+	private ExecutionReport(ProcedureExecution execution, int id)
 	{
 		this.id = id;
-		this.execution = execution;
+		if (execution == null)
+			execution = executions.get(id);
+		else
+			executions.put(id, execution);
+		
 		if (execution != null)
 		{
 			this.procedure = execution.getProcedure();
-			this.procedureName = procedure.getName();
+			if (this.procedure != null)
+				this.procedureName = procedure.getName();
 		}
+		this.execution = execution;
 	}
 
 	public int getID()

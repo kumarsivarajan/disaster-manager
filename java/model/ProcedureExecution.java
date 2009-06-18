@@ -42,6 +42,8 @@ public class ProcedureExecution
 
 	public Procedure getProcedure()
 	{
+		if (procedure.isDeleted())
+			return null;
 		return procedure;
 	}
 
@@ -60,6 +62,8 @@ public class ProcedureExecution
 			currentAction.doAction(this);
 			long time = (System.currentTimeMillis() / 1000) - start;
 			report.logActionExecution(currentAction, time);
+			if (shuttingDown)
+				break;
 			currentAction = currentAction.getNextAction();
 		}
 	}
@@ -78,7 +82,7 @@ public class ProcedureExecution
 			if (shuttingDown)
 				return;
 			shuttingDown = true;
-			report.setErrorMessage("zatrzymano");
+			report.setErrorMessage("Zatrzymano");
 		}
 		thread.interrupt();
 	}

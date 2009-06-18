@@ -12,6 +12,7 @@ public class Procedure
 	protected String description;
 	protected boolean active = true;
 	protected boolean added = false;
+	protected boolean deleted = false;
 
 	protected ProcedureExecution execution;
 
@@ -65,6 +66,7 @@ public class Procedure
 		proc.name = proc.description = null;
 		proc.active = false;
 		proc.added = false;
+		proc.deleted = true;
 	}
 
 	protected static Procedure getProcedureFromSQL(SQLRow row)
@@ -176,6 +178,11 @@ public class Procedure
 	public boolean isAdded()
 	{
 		return added;
+	}
+
+	public boolean isDeleted()
+	{
+		return deleted;
 	}
 
 	public Action[] getActions() throws SQLException
