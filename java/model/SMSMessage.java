@@ -1,4 +1,4 @@
-package framework;
+package model;
 
 import java.net.*;
 import java.io.IOException;
@@ -11,7 +11,7 @@ class SMSException extends Exception {
 
 	}
 
-public class SMSEngine
+public class SMSMessage
 {
 	//TODO: do konfiga, "final"
 	private static String requestUrl = "http://sms.wadja.com/partners/sms/default.aspx" +
