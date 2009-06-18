@@ -58,7 +58,7 @@ public class TplEngine
 			try
 			{
 				conf.setDirectoryForTemplateLoading(
-						new File(Servlet.rootPath + "WEB-INF/classes/view"));
+						new File(Servlet.config.getProperty("path.classes") + "view"));
 			}
 			catch (IOException e)
 			{

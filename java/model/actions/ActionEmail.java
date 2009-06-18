@@ -1,5 +1,6 @@
 package model.actions;
 
+import framework.Servlet;
 import model.*;
 import tools.StringTools;
 import java.util.*;
@@ -14,11 +15,16 @@ public class ActionEmail extends Action
 	protected String subject = "";
 	protected String message = "";
 
-	protected final static String from = "disaster@localhost";
-	protected final static String host = "localhost";
-	protected final static int port = 25;
-	protected final static String login = "";//dmanager";
-	protected final static String password = "";//disastermanager1";
+	protected final static String from =
+			Servlet.config.getProperty("action.email.from");
+	protected final static String host =
+			Servlet.config.getProperty("action.email.host");
+	protected final static int port =
+			Integer.parseInt(Servlet.config.getProperty("action.email.port"));
+	protected final static String login =
+			Servlet.config.getProperty("action.email.login");
+	protected final static String password =
+			Servlet.config.getProperty("action.email.password");
 
 	public ActionEmail(Procedure procedure)
 	{
@@ -126,6 +132,7 @@ public class ActionEmail extends Action
 				
 			letter.setText(message);
 
+			//TODO
 			///*
 			Transport transport = session.getTransport("smtp");
 

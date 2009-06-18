@@ -13,6 +13,7 @@ class SMSException extends Exception {
 
 public class SMSEngine
 {
+	//TODO: do konfiga, "final"
 	private static String requestUrl = "http://sms.wadja.com/partners/sms/default.aspx" +
 			"?key=%s&msg=%s&to=%s&from=%s&send=%d&unicode=%s/";
 	private static String key = "21FA03E3F080";

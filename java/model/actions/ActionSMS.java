@@ -7,6 +7,7 @@ import tools.StringTools;
 
 public class ActionSMS extends Action
 {
+	//TODO: do konfiga, "final", zdublowany konfig z SMSEngine
 	protected Long[] recipients = new Long[0];
 	protected String message = "";
 	

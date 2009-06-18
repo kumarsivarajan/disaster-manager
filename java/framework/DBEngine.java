@@ -29,9 +29,10 @@ public class DBEngine
 {
 	final Connection conn;
 	
-	final static String DBuser = "disaster_manager"; //TODO: do jakiegoś konfiga
-	final static String DBpass = "dmpass"; // j/w
-	final static String DBname = "disaster_manager"; // j/w
+	final static String DBuser = Servlet.config.getProperty("db.user");
+	final static String DBpass = Servlet.config.getProperty("db.password");
+	final static String DBname = Servlet.config.getProperty("db.name");
+	final static String DBhost = Servlet.config.getProperty("db.host");
 
 	private static DBEngine currConnection; //docelowo: tablica połączeń
 
@@ -46,7 +47,7 @@ public class DBEngine
 			throw new SQLException("ClassNotFoundException: " + e.getMessage());
 		}
 		conn = DriverManager.getConnection(
-				"jdbc:mysql://localhost/" + DBname, DBuser, DBpass);
+				"jdbc:mysql://" + DBhost + "/" + DBname, DBuser, DBpass);
 	}
 
 	protected static DBEngine getConnection() throws SQLException

@@ -13,7 +13,8 @@ abstract public class Controller
 	final protected ServletOutputStream output;
 	final protected TplEngine tpl;
 	
-	final static private String defaultContentType = "application/xhtml+xml";
+	final static private String defaultContentType =
+			Servlet.config.getProperty("core.defaultContentType");
 
 	protected static enum RedirectType { REDIR_MOVEDPERMA, REDIR_FOUND, REDIR_SEEOTHER };
 	//REDIR_NOTMODIFIED, REDIR_USEPROXY

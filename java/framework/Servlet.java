@@ -1,18 +1,18 @@
 package framework;
 
 import controller.*;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.SQLException;
-import java.util.Vector;
+import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import tools.RegexpMatcher;
-import freemarker.core.*;
 
 public class Servlet extends HttpServlet
 {
 	final private Vector<ControllerMatch> matchers = new Vector<ControllerMatch>();
-	final public static String rootPath = "/srv/tomcat6/webapps/ROOT/"; //to mozna automatycznie?
-	//final public static String rootPath = "c:/code/NetBeans/disaster/build/web/";
+	final public static Properties config = new Properties();
 
 	@Override public void init() throws ServletException
 	{
@@ -26,6 +26,22 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("ProcedureExecution", "^/procedureExecution/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("ActionManager", "^/actionManagement/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("Reports", "^/reports/((?:[a-z0-9-]+/)*)"));
+
+		String rootPath = getServletContext().getRealPath("/");
+		String classesPath = rootPath + "WEB-INF/classes/";
+
+		try
+		{
+			config.load(new FileInputStream(classesPath + "config.ini"));
+		}
+		catch (IOException e)
+		{
+			throw new ServletException("Nie można wczytać pliku konfiguracyjnego: " +
+					e.getMessage());
+		}
+
+		config.setProperty("path.root", rootPath);
+		config.setProperty("path.classes", classesPath);
 	}
 
 	@Override public void finalize() throws Throwable
@@ -107,7 +123,7 @@ public class Servlet extends HttpServlet
 			se.setStackTrace(e.getStackTrace());
 			throw se;
 		}
-		//tu jakieś łapanie innych wyjątków
+		//TODO: tu jakieś łapanie innych wyjątków
 	}
 }
 

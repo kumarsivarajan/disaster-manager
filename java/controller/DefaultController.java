@@ -15,6 +15,11 @@ public class DefaultController extends Controller
 	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
-		tpl.display("index.ftl");
+		String s = "";
+		for (Object a : Servlet.config.keySet())
+			s += "[" + a + "] = [" + Servlet.config.getProperty((String)a) + "], ";
+		message("keys: " + s);
+		return;
+		//tpl.display("index.ftl");
 	}
 }
