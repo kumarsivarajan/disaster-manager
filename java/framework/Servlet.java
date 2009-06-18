@@ -109,7 +109,7 @@ public class Servlet extends HttpServlet
 		catch (SQLException e)
 		{
 			controller.setContentType("text/plain");
-			controller.tpl.writeDirectly("Nie mozna polaczyc sie z baza danych");
+			controller.tpl.writeDirectly("Nie mozna polaczyc sie z baza danych.\n" + e.getMessage());
 			return;
 		}
 

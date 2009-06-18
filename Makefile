@@ -2,6 +2,18 @@
 CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar
 APPPATH = /srv/tomcat6/webapps/ROOT
 
+SQL_UNINSTALL_1=DROP USER 'disaster_manager'@'localhost';
+SQL_UNINSTALL_2=DROP DATABASE disaster_manager;
+
+SQL_INSTALL=\
+	CREATE USER 'disaster_manager'@'localhost' IDENTIFIED BY 'dmpass'; \
+	CREATE DATABASE disaster_manager; \
+	GRANT ALL PRIVILEGES ON disaster_manager.* TO 'disaster_manager'@'localhost'; \
+	ALTER DATABASE disaster_manager DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci; \
+	USE disaster_manager; \
+	SOURCE db.sql;
+
+
 all: docs/dokument-wizji.pdf bin
 
 docs/dokument-wizji.pdf: docs/dokument-wizji.tex
@@ -23,9 +35,19 @@ bin: docs/dokument-wizji.pdf
 	cp docs/dokument-wizji.pdf bin/docs/dokument-wizji.pdf
 
 install: bin
+	sudo mkdir -p $(APPPATH)/WEB-INF
 	sudo rm -f -r $(APPPATH)/WEB-INF/*
 	sudo cp -f -r ./bin/WEB-INF/* $(APPPATH)/WEB-INF/
 	sudo /sbin/service tomcat6 restart
+
+uninstall-db:
+	sudo /sbin/service mysql start
+	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_1)"
+	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_2)"
+
+install-db:
+	sudo /sbin/service mysql start
+	sudo mysql -e "$(SQL_INSTALL)"
 
 clean:
 	@rm -f docs/dokument-wizji.aux

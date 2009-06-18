@@ -1,0 +1,10 @@
+Zależności:
+- tomcat6
+- tomcat6-servlet-2_5-api
+- mysql 5.0
+- mysql-client (potrzebny przy instalacji)
+- mysql-connector-java (JDBC)
+
+Instajacja MySQL JDBC (OpenSuSE 11.1):
+- zainstalować pakiet  mysql-connector-java
+- # ln -s /usr/share/java/mysql-connector-java.jar /usr/share/tomcat6/lib/mysql-connector-java.jar
