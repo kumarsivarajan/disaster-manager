@@ -4,14 +4,9 @@ import model.*;
 import tools.StringTools;
 import java.util.*;
 
-/*
 import javax.mail.Message.RecipientType;
-import javax.mail.MessagingException;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-*/
+import javax.mail.*;
+import javax.mail.internet.*;
 
 public class ActionEmail extends Action
 {
@@ -19,11 +14,11 @@ public class ActionEmail extends Action
 	protected String subject = "";
 	protected String message = "";
 
-	protected final static String from = "disaster@manager.pl";
+	protected final static String from = "disaster@localhost";
 	protected final static String host = "localhost";
 	protected final static int port = 25;
-	protected final static String login = "dmanager";
-	protected final static String password = "disastermanager1";
+	protected final static String login = "";//dmanager";
+	protected final static String password = "";//disastermanager1";
 
 	public ActionEmail(Procedure procedure)
 	{
@@ -107,9 +102,8 @@ public class ActionEmail extends Action
 		setMessage(args[2].trim());
 	}
 
-	public void doAction(ProcedureExecution procExec)// throws ActionException
+	public void doAction(ProcedureExecution procExec) throws ActionException
 	{
-		/*
 		try
 		{
 			Properties prop = System.getProperties();
@@ -122,29 +116,27 @@ public class ActionEmail extends Action
 			MimeMessage letter = new MimeMessage(session);
 			letter.setFrom(new InternetAddress(from));
 			
-			String[] many_addresses = addresses.split(" ");
-			letter.addRecipient(RecipientType.TO, new InternetAddress(many_addresses[0]));
+			for (String address : addresses)
+			{
+				letter.addRecipient(RecipientType.TO, new InternetAddress(address));
+				letter.addRecipient(RecipientType.CC, new InternetAddress(address));
+			}
 		
 			letter.setSubject(subject);
 				
 			letter.setText(message);
-		
-			for (int i = 1; i < many_addresses.length; i++)
-			{
-				letter.addRecipient(RecipientType.CC, new InternetAddress(many_addresses[i]));
-			}
-			/ *
+
+			///*
 			Transport transport = session.getTransport("smtp");
 
 			transport.connect(host, port, login, password);
 			transport.sendMessage(letter, letter.getAllRecipients());
-			* /
-			Transport.send(letter);
+			//*/
+			//Transport.send(letter);
 		}	
 		catch (MessagingException e)
 		{
-			throw new ActionException("Messaging: "+e.getMessage());
+			throw new ActionException("MessagingException: " + e.getMessage());
 		}
-		*/
 	}
 }

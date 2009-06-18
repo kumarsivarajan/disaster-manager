@@ -1,5 +1,5 @@
 #dla windowsa ";" zamiast ":"
-CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar
+CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar
 APPPATH = /srv/tomcat6/webapps/ROOT
 
 all: docs/dokument-wizji.pdf bin

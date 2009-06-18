@@ -2,6 +2,7 @@ package model;
 
 import java.sql.SQLException;
 import model.actions.Action;
+import model.actions.ActionException;
 
 public class ProcedureExecution
 {
@@ -59,7 +60,15 @@ public class ProcedureExecution
 		while (currentAction != null)
 		{
 			long start = System.currentTimeMillis() / 1000;
-			currentAction.doAction(this);
+			try
+			{
+				currentAction.doAction(this);
+			}
+			catch (ActionException e)
+			{
+				report.setErrorMessage("ActionException: " + e.getMessage());
+				shuttingDown = true;
+			}
 			long time = (System.currentTimeMillis() / 1000) - start;
 			report.logActionExecution(currentAction, time);
 			if (shuttingDown)

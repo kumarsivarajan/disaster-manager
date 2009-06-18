@@ -418,5 +418,5 @@ public abstract class Action
 	
 	protected abstract void setArguments(String arguments); // j/w
 
-	public abstract void doAction(ProcedureExecution procExec);
+	public abstract void doAction(ProcedureExecution procExec) throws ActionException;
 }
