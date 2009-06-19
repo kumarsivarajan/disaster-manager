@@ -26,6 +26,7 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("ProcedureExecution", "^/procedureExecution/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("ActionManager", "^/actionManagement/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("Reports", "^/reports/((?:[a-z0-9-]+/)*)"));
+		matchers.add(new ControllerMatch("API", "^/api/((?:[\\w\\d-]+/)*)"));
 
 		String rootPath = getServletContext().getRealPath("/");
 		String classesPath = rootPath + "WEB-INF/classes/";
@@ -89,6 +90,8 @@ public class Servlet extends HttpServlet
 				controller = new ActionManagerController(request, response);
 			else if (cm.controllerName.equals("Reports"))
 				controller = new ReportsController(request, response);
+			else if (cm.controllerName.equals("API"))
+				controller = new APIController(request, response);
 			else
 				throw new AssertionError("Nie uwzględniono kontrolera: " + cm.controllerName);
 			
