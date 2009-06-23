@@ -1,9 +1,6 @@
-#dla windowsa ";" zamiast ":"
+# dla windowsa ";" zamiast ":"
 CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar
 APPPATH = /srv/tomcat6/webapps/ROOT
-
-SQL_UNINSTALL_1=DROP USER 'disaster_manager'@'localhost';
-SQL_UNINSTALL_2=DROP DATABASE disaster_manager;
 
 SQL_INSTALL=\
 	CREATE USER 'disaster_manager'@'localhost' IDENTIFIED BY 'dmpass'; \
@@ -12,6 +9,11 @@ SQL_INSTALL=\
 	ALTER DATABASE disaster_manager DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci; \
 	USE disaster_manager; \
 	SOURCE db.sql;
+
+# DROP USER może skutkować błędem, więc jest na końcu
+SQL_UNINSTALL=\
+	DROP DATABASE IF EXISTS disaster_manager; \
+	DROP USER 'disaster_manager'@'localhost';
 
 all: docs/dokument-wizji.pdf bin
 
@@ -41,15 +43,11 @@ install: bin
 
 uninstall-db:
 	sudo /sbin/service mysql start
-#	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_1)"
-#	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_2)"
-	-mysql --user=root -p --force --silent -e "$(SQL_UNINSTALL_1)"
-	-mysql --user=root -p --force --silent -e "$(SQL_UNINSTALL_2)"
+	@-mysql --user=root -p --force --silent -e "$(SQL_UNINSTALL)"
 
 install-db:
 	sudo /sbin/service mysql start
-#	sudo mysql -e "$(SQL_INSTALL)"
-	mysql -p --user=root -e "$(SQL_INSTALL)"
+	@mysql --user=root -p -e "$(SQL_INSTALL)"
 
 clean:
 	@rm -f docs/dokument-wizji.aux
