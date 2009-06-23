@@ -1,15 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
-
 using Microsoft.WindowsCE.Forms;
 using System.Runtime.InteropServices;
-using System.Collections;
 
 namespace dm_terminal
 {
@@ -17,16 +11,21 @@ namespace dm_terminal
 	{
 		public static ProcedureList procedures = new ProcedureList();
 		private int selectedIndex = -1;
+		private MessageListPanel messageListPanel;
 
 		public mainForm()
 		{
 			InitializeComponent();
 
+			messageListPanel = new MessageListPanel();
+			messageListPanel.Location = new Point(7, 7);
+			messageListPanel.Size = new Size(226, 209);
+			tabMessages.Controls.Add(messageListPanel);
+
 			apiURLBox.DataBindings.Add("Text", Program.config, "apiURL");
 			updateIntervalBox.DataBindings.Add("Value", Program.config, "updateInterval");
 			newMessageNotifyBox.DataBindings.Add("Checked", Program.config, "newMessageNotify");
 			procedureListGrid.DataSource = procedures;
-			//procedureListGrid.
 			
 			notification.Text = "<html><body>" +
 				"Nowe zdarzenie" +
@@ -36,6 +35,7 @@ namespace dm_terminal
 				"</form></body></html>";
 
 			procedures.addObserver(this);
+			messageListPanel.addObserver(this);
 		}
 
 		[DllImport("coredll.dll")]
@@ -48,9 +48,8 @@ namespace dm_terminal
 
 		#region Obsługa listy procedur i kontrolki statusu
 
-		public delegate void setProcedureListStatusT(string status);
-
-		public void setProcedureListStatusM(string status)
+		private delegate void setProcedureListStatusT(string status);
+		private void setProcedureListStatusM(string status)
 		{
 			procedureListStatus.Text = status;
 			procedureListGrid.DataSource = procedures;
@@ -66,6 +65,22 @@ namespace dm_terminal
 			procedureListStatus.Invoke(
 				new setProcedureListStatusT(setProcedureListStatusM),
 				new Object[] { status });
+		}
+
+		#endregion
+
+		#region Obsługa powiadomień o nowych komunikatach
+
+		private delegate void notifyNewMessagesT();
+		private void notifyNewMessagesM()
+		{
+			if (Program.config.newMessageNotify)
+				notification.Visible = true;
+		}
+
+		public void notifyNewMessages()
+		{
+			Invoke(new notifyNewMessagesT(notifyNewMessagesM));
 		}
 
 		#endregion
@@ -119,8 +134,6 @@ namespace dm_terminal
 			procedureListGrid.Select(selectedIndex);
 		}
 
-		#endregion
-
 		private void apiURLBox_GotFocus(object sender, EventArgs e)
 		{
 			inputPanel.Enabled = true;
@@ -131,7 +144,22 @@ namespace dm_terminal
 			inputPanel.Enabled = false;
 		}
 
+		private void messageListRefreshButton_Click(object sender, EventArgs e)
+		{
+			messageListPanel.doUpdate();
+		}
 
+		private void notification_ResponseSubmitted(object sender, ResponseSubmittedEventArgs e)
+		{
+			notification.Visible = false;
+			if (e.Response.Equals("open"))
+			{
+				mainFormTabs.SelectedIndex = mainFormTabs.TabPages.IndexOf(tabMessages);
+				this.BringToFront();
+			}
+		}
+
+		#endregion
 
 	}
 }

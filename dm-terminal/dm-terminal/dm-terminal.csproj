@@ -70,6 +70,10 @@
       <DependentUpon>mainForm.cs</DependentUpon>
     </Compile>
     <Compile Include="dm-terminal.cs" />
+    <Compile Include="Message.cs" />
+    <Compile Include="MessageListPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Procedure.cs" />
     <Compile Include="ProcedureList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -36,6 +36,7 @@
 			this.menuMinimizeBtn = new System.Windows.Forms.MenuItem();
 			this.mainFormTabs = new System.Windows.Forms.TabControl();
 			this.tabMessages = new System.Windows.Forms.TabPage();
+			this.messageListRefreshButton = new System.Windows.Forms.Button();
 			this.tabProcedures = new System.Windows.Forms.TabPage();
 			this.procedureListStatus = new System.Windows.Forms.Label();
 			this.procedureListRefreshButton = new System.Windows.Forms.Button();
@@ -54,6 +55,7 @@
 			this.notification = new Microsoft.WindowsCE.Forms.Notification();
 			this.inputPanel = new Microsoft.WindowsCE.Forms.InputPanel(this.components);
 			this.mainFormTabs.SuspendLayout();
+			this.tabMessages.SuspendLayout();
 			this.tabProcedures.SuspendLayout();
 			this.tabConfig.SuspendLayout();
 			this.SuspendLayout();
@@ -89,10 +91,20 @@
 			// 
 			this.tabMessages.AutoScroll = true;
 			this.tabMessages.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(221)))), ((int)(((byte)(255)))), ((int)(((byte)(221)))));
+			this.tabMessages.Controls.Add(this.messageListRefreshButton);
 			this.tabMessages.Location = new System.Drawing.Point(0, 0);
 			this.tabMessages.Name = "tabMessages";
 			this.tabMessages.Size = new System.Drawing.Size(240, 245);
 			this.tabMessages.Text = "Komunikaty";
+			// 
+			// messageListRefreshButton
+			// 
+			this.messageListRefreshButton.Location = new System.Drawing.Point(7, 222);
+			this.messageListRefreshButton.Name = "messageListRefreshButton";
+			this.messageListRefreshButton.Size = new System.Drawing.Size(226, 20);
+			this.messageListRefreshButton.TabIndex = 1;
+			this.messageListRefreshButton.Text = "Odśwież";
+			this.messageListRefreshButton.Click += new System.EventHandler(this.messageListRefreshButton_Click);
 			// 
 			// tabProcedures
 			// 
@@ -103,7 +115,7 @@
 			this.tabProcedures.Controls.Add(this.procedureListGrid);
 			this.tabProcedures.Location = new System.Drawing.Point(0, 0);
 			this.tabProcedures.Name = "tabProcedures";
-			this.tabProcedures.Size = new System.Drawing.Size(240, 245);
+			this.tabProcedures.Size = new System.Drawing.Size(232, 242);
 			this.tabProcedures.Text = "Procedury";
 			// 
 			// procedureListStatus
@@ -177,7 +189,7 @@
 			this.tabConfig.Controls.Add(this.apiURLLabel);
 			this.tabConfig.Location = new System.Drawing.Point(0, 0);
 			this.tabConfig.Name = "tabConfig";
-			this.tabConfig.Size = new System.Drawing.Size(240, 245);
+			this.tabConfig.Size = new System.Drawing.Size(232, 242);
 			this.tabConfig.Text = "Konfiguracja";
 			// 
 			// newMessageNotifyBox
@@ -252,6 +264,7 @@
 			this.notification.Icon = ((System.Drawing.Icon)(resources.GetObject("notification.Icon")));
 			this.notification.InitialDuration = 60;
 			this.notification.Text = "notification";
+			this.notification.ResponseSubmitted += new Microsoft.WindowsCE.Forms.ResponseSubmittedEventHandler(this.notification_ResponseSubmitted);
 			// 
 			// mainForm
 			// 
@@ -266,6 +279,7 @@
 			this.Name = "mainForm";
 			this.Text = "Disaster Manager Terminal";
 			this.mainFormTabs.ResumeLayout(false);
+			this.tabMessages.ResumeLayout(false);
 			this.tabProcedures.ResumeLayout(false);
 			this.tabConfig.ResumeLayout(false);
 			this.ResumeLayout(false);
@@ -279,8 +293,7 @@
         private System.Windows.Forms.TabPage tabProcedures;
         private System.Windows.Forms.MenuItem menuZamknijBtn;
         private System.Windows.Forms.TabPage tabConfig;
-        private System.Windows.Forms.TextBox apiURLBox;
-        private System.Windows.Forms.Label apiURLLabel;
+		private System.Windows.Forms.TextBox apiURLBox;
         private System.Windows.Forms.Button saveConfigButton;
         private System.Windows.Forms.Label updateIntervalLabel;
         private System.Windows.Forms.NumericUpDown updateIntervalBox;
@@ -295,6 +308,8 @@
         private System.Windows.Forms.Label procedureListStatus;
         private System.Windows.Forms.DataGrid procedureListGrid;
 		private Microsoft.WindowsCE.Forms.InputPanel inputPanel;
+		private System.Windows.Forms.Button messageListRefreshButton;
+		private System.Windows.Forms.Label apiURLLabel;
 
     }
 }
