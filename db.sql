@@ -1,12 +1,16 @@
+-- --------------------------------------------------------
 
-DROP TABLE probe;
-DROP TABLE probe_values;
-DROP TABLE `procedure`;
-DROP TABLE procedure_action;
-DROP TABLE report;
-DROP TABLE report_action;
-DROP TABLE `user`;
-DROP TABLE `message`;
+--
+-- Struktura tabeli dla  `message`
+--
+
+CREATE TABLE `message` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `message` text collate utf8_polish_ci NOT NULL,
+  `read` tinyint(1) NOT NULL default '0' COMMENT 'czy wiadomość została przeczytana',
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY  (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='wiadomości dla operatora';
 
 -- --------------------------------------------------------
 
@@ -87,8 +91,9 @@ CREATE TABLE `report` (
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP COMMENT 'data rozpoczęcia testu',
   `error` varchar(255) collate utf8_polish_ci default NULL COMMENT 'ewentualny komunikat błędu',
   PRIMARY KEY  (`id`),
-  KEY `procedure` (`procedure`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
+  KEY `procedure` (`procedure`),
+  KEY `date` (`date`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
 
 -- --------------------------------------------------------
 
@@ -97,7 +102,6 @@ CREATE TABLE `report` (
 --
 
 CREATE TABLE `report_action` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
   `report` smallint(5) unsigned NOT NULL,
   `order` smallint(5) unsigned NOT NULL COMMENT 'która w kolei została wykonana ta akcja',
   `type` tinyint(3) unsigned NOT NULL COMMENT 'patrz procedure_action',
@@ -105,37 +109,6 @@ CREATE TABLE `report_action` (
   `maxtime` mediumint(8) unsigned default NULL,
   `usedtime` mediumint(8) unsigned NOT NULL COMMENT 'czas działania akcji',
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `report_order` (`report`,`order`),
+  PRIMARY KEY  (`report`,`order`),
   KEY `report` (`report`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla  `user`
---
-
-CREATE TABLE `user` (
-  `id` smallint(5) unsigned NOT NULL auto_increment,
-  `login` varchar(32) collate utf8_polish_ci NOT NULL,
-  `hash` char(32) collate utf8_polish_ci default NULL COMMENT 'null tylko w momencie między dodaniem użytkownika a ustawieniem mu hasła',
-  `level` tinyint(3) unsigned NOT NULL COMMENT '0: nieaktywny, 1: gość, 2: użytkownik, 3: administrator',
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `login` (`login`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='użytkownicy - operatorzy systemu';
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla `message`
---
-
-CREATE TABLE `message` (
-  `id` mediumint(8) unsigned NOT NULL auto_increment,
-  `arguments` text collate utf8_polish_ci NOT NULL,
-  `userID` smallint(5) unsigned NOT NULL,
-  `read` tinyint(1) NOT NULL COMMENT 'czy wiadomość została przeczytana',
-  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='wiadomości dla użytkowników systemu';

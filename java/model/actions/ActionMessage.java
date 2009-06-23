@@ -6,7 +6,6 @@ import java.sql.SQLException;
 
 public class ActionMessage extends Action
 {
-	protected String user = "";
 	protected String message = "";
 
 	public ActionMessage(Procedure procedure)
@@ -36,43 +35,25 @@ public class ActionMessage extends Action
 		return getMessage();
 	}
 
-	public void setUser(String user)
-	{
-		if (user == null)
-			throw new NullPointerException();
-		this.user = user;
-	}
-
-	public String getUser()
-	{
-		return user;
-	}
-
-
 	protected void setArguments(String arguments)
 	{
 		if (arguments == null)
 			throw new NullPointerException();
-		String[] args = arguments.split("\n", 2);
-		//TODO
-		setMessage(args[1].trim());
+		setMessage(arguments);
 	}
 
 	public void doAction(ProcedureExecution procExec) throws ActionException
 	{
-		try {
-			DBEngine.insert("message", new SQLRow() {{
-				put("userID", user);
-				put("message", message);
-				put("read", 0);
-			}}, false);
-		}
-		catch (java.sql.SQLException e)
+		if (message.trim().equals(""))
+			return;
+		OperatorMessage opmsg = new OperatorMessage(message);
+		try
 		{
-			throw new ActionException("SQLException: " + e.getMessage());
+			opmsg.save();
+		}
+		catch (SQLException e)
+		{
+			throw new ActionException(e);
 		}
 	}
-
-	
-
 }
