@@ -1,9 +1,12 @@
 package model.actions;
 
 import model.*;
+import framework.*;
+import java.sql.SQLException;
 
 public class ActionMessage extends Action
 {
+	protected String user = "";
 	protected String message = "";
 
 	public ActionMessage(Procedure procedure)
@@ -37,11 +40,23 @@ public class ActionMessage extends Action
 	{
 		if (arguments == null)
 			throw new NullPointerException();
-		setMessage(arguments);
+		String[] args = arguments.split("\n", 2);
+		//TODO
+		setMessage(args[1].trim());
 	}
 
-	public void doAction(ProcedureExecution procExec)
+	public void doAction(ProcedureExecution procExec) throws ActionException
 	{
-		//TODO: wykonanie akcji
+		try {
+			DBEngine.insert("message", new SQLRow() {{
+				put("userID", user);
+				put("message", message);
+				put("read", 0);
+			}}, false);
+		}
+		catch (java.sql.SQLException e)
+		{
+			throw new ActionException("SQLException: " + e.getMessage());
+		}
 	}
 }

@@ -1,3 +1,13 @@
+
+DROP TABLE probe;
+DROP TABLE probe_values;
+DROP TABLE `procedure`;
+DROP TABLE procedure_action;
+DROP TABLE report;
+DROP TABLE report_action;
+DROP TABLE `user`;
+DROP TABLE `message`;
+
 -- --------------------------------------------------------
 
 --
@@ -114,3 +124,18 @@ CREATE TABLE `user` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `login` (`login`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='użytkownicy - operatorzy systemu';
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla `message`
+--
+
+CREATE TABLE `message` (
+  `id` mediumint(8) unsigned NOT NULL auto_increment,
+  `arguments` text collate utf8_polish_ci NOT NULL,
+  `userID` smallint(5) unsigned NOT NULL,
+  `read` tinyint(1) NOT NULL COMMENT 'czy wiadomość została przeczytana',
+  `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='wiadomości dla użytkowników systemu';
