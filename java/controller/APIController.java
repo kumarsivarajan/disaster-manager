@@ -86,6 +86,18 @@ public class APIController extends Controller
 		xmltpl.display("API-listMessages.ftl");
 	}
 
+	public void markMessageRead(int id) throws ServletException, SQLException
+	{
+		OperatorMessage message = OperatorMessage.getMessageByID(id);
+		message.setRead();
+
+		TplEngine xmltpl = new TplEngine(null, output);
+		xmltpl.setVar("message", message);
+
+		setContentType("application/xml");
+		xmltpl.display("API-markMessageRead.ftl");
+	}
+
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
 		if (params.length != 1)
@@ -109,6 +121,12 @@ public class APIController extends Controller
 		}
 		else if (akcja.equals("listMessages"))
 			listMessagesAction();
+		else if (akcja.equals("markMessageRead"))
+		{
+			if (params.length != 2)
+				throw new ServletException("Zła ilośc parametrów (2st)");
+			markMessageRead(Integer.parseInt(params[1]));
+		}
 		else
 			throw new ServletException("TODO: komunikaty 404: [" + akcja + " " + tools.StringTools.join(",", params) + "]");
 	}
