@@ -76,6 +76,16 @@ public class APIController extends Controller
 		xmltpl.display("API-procedureExecution.ftl");
 	}
 
+	public void listMessagesAction() throws ServletException, SQLException
+	{
+		OperatorMessage[] messages = OperatorMessage.getUnreadMessages();
+		TplEngine xmltpl = new TplEngine(null, output);
+
+		xmltpl.setVar("messages", messages);
+		setContentType("application/xml");
+		xmltpl.display("API-listMessages.ftl");
+	}
+
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
 		if (params.length != 1)
@@ -97,6 +107,8 @@ public class APIController extends Controller
 				throw new ServletException("Zła ilośc parametrów (2st)");
 			shutdownProcedureAction(Integer.parseInt(params[1]));
 		}
+		else if (akcja.equals("listMessages"))
+			listMessagesAction();
 		else
 			throw new ServletException("TODO: komunikaty 404: [" + akcja + " " + tools.StringTools.join(",", params) + "]");
 	}

@@ -7,12 +7,11 @@ SQL_UNINSTALL_2=DROP DATABASE disaster_manager;
 
 SQL_INSTALL=\
 	CREATE USER 'disaster_manager'@'localhost' IDENTIFIED BY 'dmpass'; \
-	CREATE DATABASE disaster_manager; \
+	CREATE DATABASE disaster_manager CHARACTER SET 'utf8'; \
 	GRANT ALL PRIVILEGES ON disaster_manager.* TO 'disaster_manager'@'localhost'; \
 	ALTER DATABASE disaster_manager DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci; \
 	USE disaster_manager; \
 	SOURCE db.sql;
-
 
 all: docs/dokument-wizji.pdf bin
 
@@ -42,12 +41,15 @@ install: bin
 
 uninstall-db:
 	sudo /sbin/service mysql start
-	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_1)"
-	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_2)"
+#	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_1)"
+#	-sudo mysql --force --silent -e "$(SQL_UNINSTALL_2)"
+	-mysql --user=root -p --force --silent -e "$(SQL_UNINSTALL_1)"
+	-mysql --user=root -p --force --silent -e "$(SQL_UNINSTALL_2)"
 
 install-db:
 	sudo /sbin/service mysql start
-	sudo mysql -e "$(SQL_INSTALL)"
+#	sudo mysql -e "$(SQL_INSTALL)"
+	mysql -p --user=root -e "$(SQL_INSTALL)"
 
 clean:
 	@rm -f docs/dokument-wizji.aux

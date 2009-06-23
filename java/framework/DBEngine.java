@@ -47,7 +47,8 @@ public class DBEngine
 			throw new SQLException("ClassNotFoundException: " + e.getMessage());
 		}
 		conn = DriverManager.getConnection(
-				"jdbc:mysql://" + DBhost + "/" + DBname, DBuser, DBpass);
+				"jdbc:mysql://" + DBhost + "/" + DBname +
+				"?characterEncoding=UTF-8", DBuser, DBpass);
 	}
 
 	protected static DBEngine getConnection() throws SQLException

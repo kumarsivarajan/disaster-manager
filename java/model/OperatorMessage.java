@@ -52,8 +52,8 @@ public class OperatorMessage
 	public static OperatorMessage[] getUnreadMessages() throws SQLException
 	{
 		return getMessagesFromSQL(DBEngine.getAllRows(
-				"SELECT * FROM `message` WHERE not read " +
-				" ORDER BY date DESC"));
+				"SELECT * FROM `message` WHERE not `read` " +
+				" ORDER BY `date` DESC"));
 	}
 
 	public static OperatorMessage getMessageByID(int id) throws SQLException
