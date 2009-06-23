@@ -36,6 +36,19 @@ public class ActionMessage extends Action
 		return getMessage();
 	}
 
+	public void setUser(String user)
+	{
+		if (user == null)
+			throw new NullPointerException();
+		this.user = user;
+	}
+
+	public String getUser()
+	{
+		return user;
+	}
+
+
 	protected void setArguments(String arguments)
 	{
 		if (arguments == null)
@@ -59,4 +72,7 @@ public class ActionMessage extends Action
 			throw new ActionException("SQLException: " + e.getMessage());
 		}
 	}
+
+	
+
 }
