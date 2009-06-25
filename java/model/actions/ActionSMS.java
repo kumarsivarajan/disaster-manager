@@ -1,24 +1,36 @@
 
 package model.actions;
 
-import model.*;
-import java.util.Vector;
+import model.Procedure;
+import model.ProcedureExecution;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import tools.StringTools;
+import framework.Servlet;
 
 public class ActionSMS extends Action
 {
 	//TODO: do konfiga, "final", zdublowany konfig z SMSMessage
-	protected Long[] recipients = new Long[0];
+	protected String[] recipients = new String[0];
 	protected String message = "";
-	
-    protected final static String from = "DisManager"; // max 11 znaków
 
-	protected final static String requestUrl = "http://sms.wadja.com/partners/sms/default.aspx" +
-			"?key=%s&msg=%s&to=%s&from=%s&send=%d&unicode=%s/";
-	protected final static String key = "21FA03E3F080";
+	protected final static String from = 
+			Servlet.config.getProperty("action.SMS.from") ; // max 11 znaków tylko w wersji Premium serwisu
 
-	protected final static int send = 1;
-	protected final static String unicode = "no";
+	protected final static String requestUrl =
+			Servlet.config.getProperty("action.SMS.requestUrl");
+	protected final static String key =
+			Servlet.config.getProperty("action.SMS.key");
+
+	protected final static String send =
+			Servlet.config.getProperty("action.SMS.send");
+	protected final static String unicode =
+			Servlet.config.getProperty("action.SMS.unicode");
+
+
+	//TODO ususwanie polskich znakow z tekstu SMSa
 
 
 	public ActionSMS(Procedure procedure) 
@@ -27,13 +39,15 @@ public class ActionSMS extends Action
 	}
 
 
-	public void setRecipients(String recipients)
+	public void setRecipients(String recip)
 	{
-		if (recipients == null)
+		if (recip == null)
 			throw new NullPointerException();
-		recipients = recipients.replace('\n', ' ');
-		recipients = recipients.replace(',', ' ').trim();
-		String[] recipientsRAW = recipients.split(" ");
+		recip = recip.replace('\n', ' ');
+		recip = recip.replace(',', ' ').trim();
+
+		recipients = recip.split(" ");
+		/*
 		Vector<Long> recipientsV = new Vector<Long>();
 		for (String recipient : recipientsRAW)
 		{
@@ -47,7 +61,7 @@ public class ActionSMS extends Action
 			{
 			}
 		}
-		this.recipients = recipientsV.toArray(new Long[0]);
+		this.recipients = recipientsV.toArray(new Long[0]);*/
 	}
 
 	public String getRecipients()
@@ -87,26 +101,38 @@ public class ActionSMS extends Action
 	}
 
 
-	public void doAction(ProcedureExecution procExec)// throws ActionException
+	public void doAction(ProcedureExecution procExec) throws ActionException
 	{
-/*
-		if (number == null)
-			throw new ActionException("Błąd wysyłania SMS. Brak adresata.");
+
 		if (message == null)
 			throw new ActionException("Błąd wysyłania SMS. Brak treści wiadomości.");
  
 
-		try
+		for (String recipient : recipients)
 		{
-			URL url = new URL(String.format(requestUrl, key, message, number, from,
+			try
+			{
+
+				// błąd w ustawianiu adresata
+				URL url = new URL(String.format(requestUrl, key, message, recipient, from,
 						send, unicode).replaceAll(" ", "%20"));
-			url.getContent();
+				url.getContent();
+
+	
+			}
+			catch (MalformedURLException ex)
+			{
+				throw new ActionException("MalformedURLException: "
+						+ ex.getMessage());
+			}
+			catch (IOException ex)
+			{
+				throw new ActionException("IOException: "
+						+ ex.getMessage());
+			}
+
 		}
-		catch (IOException ex)
-		{
-			throw new ActionException(ex.getMessage());
-		}
-*/
+
 
 	}
 }

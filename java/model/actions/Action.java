@@ -6,6 +6,7 @@ import java.util.*;
 import model.*;
 import tools.Pair;
 
+
 public abstract class Action
 {
 	protected Integer id;
@@ -17,8 +18,9 @@ public abstract class Action
 
 	public static enum ActionType {
 		ACTION_MESSAGE, ACTION_EMAIL, ACTION_XMPP_RECEIVE, ACTION_SMS,
-		ACTION_SERIALPROBE_SET, ACTION_SERIALPROBE_GET}
+		ACTION_SERIALPROBE_SET, ACTION_SERIALPROBE_GET, ACTION_XMPP_SEND}
 
+	
 	private static HashMap<Integer, Action> actionCache =
 			new HashMap<Integer, Action>();
 
@@ -33,6 +35,7 @@ public abstract class Action
 			out.add(new Pair<Integer, String>(i, actionTypeToName(actionTypeFromInt(i))));
 		return out;
 	}
+
 
 	public Action(Procedure procedure)
 	{
@@ -71,6 +74,9 @@ public abstract class Action
 			case ACTION_SERIALPROBE_GET:
 				a = new ActionSerialProbeGet(procedure);
 				break;
+			case ACTION_XMPP_SEND:
+				a = new ActionXmppSend(procedure);
+				break;
 			default:
 				throw new AssertionError("Nie rozważono jednej z procedur");
 		}
@@ -94,6 +100,8 @@ public abstract class Action
 				return 5;
 			case ACTION_SERIALPROBE_GET:
 				return 6;
+			case ACTION_XMPP_SEND:
+				return 7;
 			default:
 				throw new IllegalArgumentException("Nie obsłużono wszystkich typów");
 		}
@@ -109,6 +117,8 @@ public abstract class Action
 				return "Wiadomość email";
 			case ACTION_XMPP_RECEIVE:
 				return "Odczytanie wiadomości XMPP";
+			case ACTION_XMPP_SEND:
+				return "Wysłanie wiadomości XMPP";
 			case ACTION_SMS:
 				return "Wiadomość SMS";
 			case ACTION_SERIALPROBE_SET:
@@ -136,6 +146,8 @@ public abstract class Action
 				return ActionType.ACTION_SERIALPROBE_SET;
 			case 6:
 				return ActionType.ACTION_SERIALPROBE_GET;
+			case 7:
+				return ActionType.ACTION_XMPP_SEND;
 			default:
 				throw new IllegalArgumentException("Nieprawidłowy id typu");
 		}

@@ -62,8 +62,16 @@ public class ActionManagerController extends Controller
 				a.setSubject(getParameterString("actionParam-subject"));
 				a.setMessage(getParameterString("actionParam-message"));
 			}
+			else if (action instanceof ActionXmppSend)
+			{
+				ActionXmppSend a = (ActionXmppSend)action;
+				a.setAddress(getParameterString("actionParam-address"));
+				a.setSubject(getParameterString("actionParam-subject"));
+				a.setMessage(getParameterString("actionParam-message"));
+			}
 			else if (action instanceof ActionXmppReceive)
 			{
+				ActionXmppReceive a = (ActionXmppReceive)action;
 				//TODO
 			}
 			else if (action instanceof ActionSMS)
@@ -101,6 +109,8 @@ public class ActionManagerController extends Controller
 			paramForm = "email";
 		else if (action instanceof ActionXmppReceive)
 			paramForm = "xmppReceive";
+		else if (action instanceof ActionXmppSend)
+			paramForm = "xmppSend";
 		else if (action instanceof ActionSMS)
 			paramForm = "sms";
 		else if (action instanceof ActionSerialProbeSet)

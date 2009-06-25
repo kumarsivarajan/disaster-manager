@@ -9,6 +9,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import tools.RegexpMatcher;
 
+import model.*;
+import model.actions.*;
+
 public class Servlet extends HttpServlet
 {
 	final private Vector<ControllerMatch> matchers = new Vector<ControllerMatch>();

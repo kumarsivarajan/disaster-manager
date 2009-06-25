@@ -51,9 +51,10 @@ public class DBEngine
 				"?characterEncoding=UTF-8", DBuser, DBpass);
 	}
 
+
 	protected static DBEngine getConnection() throws SQLException
 	{
-		if (currConnection == null)
+		if (currConnection == null || currConnection.conn.isClosed())
 			currConnection = new DBEngine();
 		return currConnection;
 	}
