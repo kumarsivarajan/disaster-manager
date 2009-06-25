@@ -1,5 +1,5 @@
 # dla windowsa ";" zamiast ":"
-CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar
+CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar:./lib/comm.jar
 APPPATH = /srv/tomcat6/webapps/ROOT
 
 SQL_INSTALL=\
@@ -39,6 +39,10 @@ install: bin
 	sudo mkdir -p $(APPPATH)/WEB-INF
 	sudo rm -f -r $(APPPATH)/WEB-INF/*
 	sudo cp -f -r ./bin/WEB-INF/* $(APPPATH)/WEB-INF/
+	sudo cp -f ./lib/libLinuxSerialParallel._so /lib/libLinuxSerialParallel.so
+	sudo cp -f ./lib/libLinuxSerialParallel_g._so /lib/libLinuxSerialParallel_g.so
+	sudo cp -f ./lib/javax.comm.properties /usr/share/tomcat6/javax.comm.properties
+	sudo cp -f ./lib/comm.jar /usr/share/tomcat6/lib/comm.jar
 	sudo /sbin/service tomcat6 restart
 
 uninstall-db:

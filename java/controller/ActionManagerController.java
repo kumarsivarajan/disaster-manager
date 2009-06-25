@@ -72,6 +72,10 @@ public class ActionManagerController extends Controller
 				a.setRecipients(getParameterString("actionParam-recipients"));
 				a.setMessage(getParameterString("actionParam-message"));
 			}
+			else if (action instanceof ActionSerialProbeSet)
+			{
+				//TODO
+			}
 			else
 				throw new AssertionError("Nieznany typ akcji");
 
@@ -91,6 +95,8 @@ public class ActionManagerController extends Controller
 			paramForm = "xmppReceive";
 		else if (action instanceof ActionSMS)
 			paramForm = "sms";
+		else if (action instanceof ActionSerialProbeSet)
+			paramForm = "serialProbeSet";
 		else
 			throw new AssertionError("Nieznany typ akcji");
 
