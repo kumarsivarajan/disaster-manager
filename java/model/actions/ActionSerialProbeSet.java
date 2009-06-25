@@ -29,10 +29,7 @@ public class ActionSerialProbeSet extends Action
 	{
 		try
 		{
-			SerialProbe probe = SerialProbe.getConnection();
-			String r;
-			r = probe.doQuery("SETPORT 5 1");
-			r = probe.doQuery("SETPORT 3 0");
+			SerialProbe.setPort(3, true);
 		}
 		catch (SerialCommunicationException e)
 		{

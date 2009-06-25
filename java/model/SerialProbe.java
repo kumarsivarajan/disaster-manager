@@ -3,12 +3,16 @@ package model;
 //uprawnienia: chmod 0666 /dev/ttyUSB*
 
 import java.io.*;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.*;
 import javax.comm.*;
 
 // http://java.sun.com/products/javacomm/reference/api/index.html
 public class SerialProbe implements SerialPortEventListener
 {
+	private final int readTimeout = 5000;
+
 	private OutputStream output;
 	private InputStream input;
 
@@ -17,14 +21,14 @@ public class SerialProbe implements SerialPortEventListener
 	private final byte[] byteBuffer = new byte[1024];
 
 	private static SerialProbe instance;
-	private final SerialPort port; //TODO: a zamykanie jak zrobić? wątkiem?
+	private final SerialPort port;
+	private boolean disconnected = false;
 
-/* to nie działa tak, jak trzeba (port nie otwiera się ponownie)
 	private DisconnectThread disconnectThread;
 
 	private class DisconnectThread extends Thread
 	{
-		final static int defaultTimeout = 5000;
+		final static int defaultTimeout = 10000;
 		final static int timeResolution = 100;
 		public int timeLeft = defaultTimeout;
 		private SerialProbe probe;
@@ -33,7 +37,6 @@ public class SerialProbe implements SerialPortEventListener
 		{
 			this.probe = probe;
 			this.setDaemon(true);
-			this.start();
 		}
 
 		@Override public void run()
@@ -46,7 +49,7 @@ public class SerialProbe implements SerialPortEventListener
 				}
 				catch (InterruptedException e)
 				{
-					return;
+					break;
 				}
 
 				timeLeft -= timeResolution;
@@ -60,7 +63,6 @@ public class SerialProbe implements SerialPortEventListener
 			timeLeft = defaultTimeout;
 		}
 	}
-*/
 
 	private SerialProbe()
 	{
@@ -68,6 +70,8 @@ public class SerialProbe implements SerialPortEventListener
 		{
 			if (instance != null)
 				throw new AssertionError("Już istnieje instancja klasy");
+
+			disconnectThread = new DisconnectThread(this);
 
 			Enumeration ports;
 			try
@@ -88,50 +92,40 @@ public class SerialProbe implements SerialPortEventListener
 			{
 				CommPortIdentifier portId = (CommPortIdentifier)ports.nextElement();
 
-
 				if (portId.getPortType() == CommPortIdentifier.PORT_SERIAL &&
-					portId.getName().startsWith("/dev/ttyUSB")) //TODO: do configa
+					portId.getName().startsWith("/dev/ttyUSB"))
 				{
 					checked += portId.getName() + ", ";
 					
 					try
 					{
-						currentPort = (SerialPort)portId.open("disaster-manager", 1000);
+						currentPort = (SerialPort)portId.open("disaster-manager", readTimeout);
 					}
-					catch (PortInUseException e)
-					{
-						continue;
-					}
-					catch (RuntimeException e)
+					catch (Throwable e) //PortInUseException
 					{
 						continue;
 					}
 
 					try
 					{
-						currentPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 						currentPort.setSerialPortParams(9600, SerialPort.DATABITS_8,
 							SerialPort.STOPBITS_1, SerialPort.PARITY_NONE);
+						currentPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
 						currentPort.addEventListener(this);
 						currentPort.notifyOnDataAvailable(true);
 
 						input = currentPort.getInputStream();
 						output = currentPort.getOutputStream();
 					}
-					catch (UnsupportedCommOperationException ex)
-					{
-						currentPort.close();
-						continue;
-					}
-					catch (IOException ex)
-					{
-						currentPort.close();
-						continue;
-					}
 					catch (TooManyListenersException e)
 					{
 						currentPort.close();
 						throw new SerialCommunicationException(e);
+					}
+					catch (Throwable e)
+					{
+						currentPort.close();
+						continue;
 					}
 
 					if (!doQuery("HELLO DM-HW-PROBE").equals("WELCOME DM-MASTER"))
@@ -146,21 +140,32 @@ public class SerialProbe implements SerialPortEventListener
 			}
 
 			if (!portFound)
-				throw new SerialCommunicationException("Nie znaleziono odpowiedniego portu. Sprawdzone: [" + checked + "]");
+			{
+				if (!checked.equals(""))
+					checked = checked.substring(0, checked.length() - 2);
+				throw new SerialCommunicationException("Nie znaleziono odpowiedniego portu. Sprawdzone: [" + checked + "]. Ustawiłeś uprawnienia?");
+			}
 
 			port = currentPort;
-//			disconnectThread = new DisconnectThread(this);
 			instance = this;
+			disconnectThread.start();
 		}
 	}
 
-	public synchronized String doQuery(String query)
+	protected synchronized String doQuery(String query)
 	{
+		if (disconnected)
+			throw new SerialCommunicationException("Port jest zamknięty");
+		if (disconnectThread == null)
+			throw new NullPointerException("Nie ma wątku rozłączania");
+		disconnectThread.reset();
 		try
 		{
+			int timeout = readTimeout;
 			output.write((query + "\n").getBytes());
 			while (cmdBuffer.isEmpty())
 			{
+				disconnectThread.reset();
 				try
 				{
 					Thread.sleep(50);
@@ -170,12 +175,22 @@ public class SerialProbe implements SerialPortEventListener
 					disconnect();
 					throw new SerialCommunicationException(e);
 				}
+				timeout -= 50;
+				if (timeout < 0)
+				{
+					disconnect();
+					throw new SerialCommunicationException("Czas przekroczony");
+				}
+				if (disconnected)
+					throw new SerialCommunicationException("Port nagle zamknięty");
 			}
 
 			String cmd = cmdBuffer.poll();
 			if (cmd == null)
 				throw new NullPointerException("Kolejka nie jest pusta");
 
+			disconnectThread.reset();
+			
 			return cmd;
 		}
 		catch (IOException e)
@@ -206,10 +221,18 @@ public class SerialProbe implements SerialPortEventListener
 
 	public static boolean isConnected()
 	{
-		return (instance != null);
+		if (instance == null)
+			return false;
+		SerialProbe p = instance;
+		if (p.disconnected)
+		{
+			p.disconnect();
+			return false;
+		}
+		return true;
 	}
 
-	private synchronized static void connect()
+	protected synchronized static void connect()
 	{
 		if (isConnected())
 			return;
@@ -218,23 +241,52 @@ public class SerialProbe implements SerialPortEventListener
 			throw new NullPointerException();
 	}
 
-	private synchronized void disconnect()
+	protected synchronized void disconnect()
 	{
-		if (!isConnected())
-			return;
-		port.close();
-		if (this == instance)
-			instance = null;
+		if (!disconnected && port != null)
+			port.close();
+		disconnected = true;
+		synchronized (SerialProbe.class)
+		{
+			if (this == instance)
+				instance = null;
+		}
 	}
 
-	public synchronized static SerialProbe getConnection()
+	protected synchronized static SerialProbe getConnection()
 	{
 		if (isConnected())
 			return instance;
 		connect();
-		if (!isConnected())
+		if (instance == null)
 			throw new NullPointerException();
 		return instance;
 	}
 
+	public static void setPort(int port, boolean on)
+	{
+		if (port < 0 || port > 7)
+			throw new IllegalArgumentException("Niepoprawny numer portu");
+		SerialProbe probe = getConnection();
+		if (!probe.doQuery("SETPORT " + port + " " + (on?"1":"0")).
+				equals("AS YOU WISH, MASTER"))
+				throw new SerialCommunicationException("Nieprawidłowa odpowiedź z czujnika");		
+	}
+
+	public static boolean getPort(int port)
+	{
+		if (port < 0 || port > 7)
+			throw new IllegalArgumentException("Niepoprawny numer portu");
+		SerialProbe probe = getConnection();
+		String r = probe.doQuery("GETPORT " + port);
+		if (!r.startsWith("PORT " + port + " IS ") || !r.substring(11).equals(", MASTER"))
+			throw new SerialCommunicationException("Nieprawidłowa odpowiedź z czujnika");
+		char state = r.charAt(10);
+		if (state == '1')
+			return true;
+		else if (state == '0')
+			return false;
+		else
+			throw new SerialCommunicationException("Nieprawidłowa odpowiedź z czujnika");
+	}
 }

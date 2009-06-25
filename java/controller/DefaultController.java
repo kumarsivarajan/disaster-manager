@@ -19,8 +19,6 @@ public class DefaultController extends Controller
 	
 	public void doAction(String[] params) throws ServletException, SQLException
 	{
-		SerialProbe probe = SerialProbe.getConnection();
-
 		tpl.display("index.ftl");
 	}
 }
