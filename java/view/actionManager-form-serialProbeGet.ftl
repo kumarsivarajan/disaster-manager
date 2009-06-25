@@ -13,10 +13,11 @@
 </p>
 
 <p>
-	<input type="checkbox" name="on" id="actionManager-serialProbeSet-on"
+	Czekaj na
+	<input type="checkbox" name="on" id="actionManager-serialProbeGet-on"
 		<#if action.getOn()> checked="checked" </#if>
 	/>
-	<label for="actionManager-serialProbeSet-on">
-		Włącz
+	<label for="actionManager-serialProbeGet-on">
+		włączenie
 	</label>
 </p>

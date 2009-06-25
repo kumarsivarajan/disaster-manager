@@ -74,7 +74,15 @@ public class ActionManagerController extends Controller
 			}
 			else if (action instanceof ActionSerialProbeSet)
 			{
-				//TODO
+				ActionSerialProbeSet a = (ActionSerialProbeSet)action;
+				a.setPort((int)getParameterLong("port"));
+				a.setOn(getParameterBoolean("on"));
+			}
+			else if (action instanceof ActionSerialProbeGet)
+			{
+				ActionSerialProbeGet a = (ActionSerialProbeGet)action;
+				a.setPort((int)getParameterLong("port"));
+				a.setOn(getParameterBoolean("on"));
 			}
 			else
 				throw new AssertionError("Nieznany typ akcji");
@@ -97,6 +105,8 @@ public class ActionManagerController extends Controller
 			paramForm = "sms";
 		else if (action instanceof ActionSerialProbeSet)
 			paramForm = "serialProbeSet";
+		else if (action instanceof ActionSerialProbeGet)
+			paramForm = "serialProbeGet";
 		else
 			throw new AssertionError("Nieznany typ akcji");
 

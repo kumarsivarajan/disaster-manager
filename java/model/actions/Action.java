@@ -68,7 +68,9 @@ public abstract class Action
 			case ACTION_SERIALPROBE_SET:
 				a = new ActionSerialProbeSet(procedure);
 				break;
-			//ACTION_SERIALPROBE_GET
+			case ACTION_SERIALPROBE_GET:
+				a = new ActionSerialProbeGet(procedure);
+				break;
 			default:
 				throw new AssertionError("Nie rozważono jednej z procedur");
 		}

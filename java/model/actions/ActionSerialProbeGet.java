@@ -2,12 +2,13 @@ package model.actions;
 
 import model.*;
 
-public class ActionSerialProbeSet extends Action
+public class ActionSerialProbeGet extends Action
 {
 	private int port = 0;
 	private boolean on = true;
+	public final int readInterval = 250;
 
-	public ActionSerialProbeSet(Procedure procedure)
+	public ActionSerialProbeGet(Procedure procedure)
 	{
 		super(procedure);
 	}
@@ -36,7 +37,7 @@ public class ActionSerialProbeSet extends Action
 
 	public ActionType getType()
 	{
-		return ActionType.ACTION_SERIALPROBE_SET;
+		return ActionType.ACTION_SERIALPROBE_GET;
 	}
 
 	public String getArguments()
@@ -60,7 +61,18 @@ public class ActionSerialProbeSet extends Action
 	{
 		try
 		{
-			SerialProbe.setPort(port, on);
+			while (SerialProbe.getPort(port) != on)
+			{
+				try
+				{
+					Thread.sleep(readInterval);
+				}
+				catch (InterruptedException e)
+				{
+					if (procExec.isShuttingDown())
+						break;
+				}
+			}
 		}
 		catch (SerialCommunicationException e)
 		{

@@ -1,13 +1,9 @@
 package controller;
 
 import framework.*;
-import java.net.*;
 import java.sql.SQLException;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
-
-import model.SerialCommunicationException;
-import model.SerialProbe;
 
 public class DefaultController extends Controller
 {
