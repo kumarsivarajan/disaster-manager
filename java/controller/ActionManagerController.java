@@ -65,14 +65,14 @@ public class ActionManagerController extends Controller
 			else if (action instanceof ActionXmppSend)
 			{
 				ActionXmppSend a = (ActionXmppSend)action;
-				a.setAddress(getParameterString("actionParam-address"));
-				a.setSubject(getParameterString("actionParam-subject"));
+				a.setAddresses(getParameterString("actionParam-address"));
 				a.setMessage(getParameterString("actionParam-message"));
 			}
 			else if (action instanceof ActionXmppReceive)
 			{
 				ActionXmppReceive a = (ActionXmppReceive)action;
-				//TODO
+				a.setAddress(getParameterString("actionParam-address"));
+				a.setMessage(getParameterString("actionParam-message"));
 			}
 			else if (action instanceof ActionSMS)
 			{

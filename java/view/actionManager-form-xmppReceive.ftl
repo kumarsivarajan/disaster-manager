@@ -1,1 +1,2 @@
-<p>TODO</p>
+<p>Nadawca: <input type="text" name="actionParam-address" value="${action.getAddress()?html}" /></p>
+<p>Komunikat: <input type="text" name="actionParam-message" value="${action.getMessage()?html}" /></p>

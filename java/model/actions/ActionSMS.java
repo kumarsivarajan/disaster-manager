@@ -6,9 +6,9 @@ import model.ProcedureExecution;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import tools.StringTools;
 import framework.Servlet;
+import java.util.Vector;
 
 public class ActionSMS extends Action
 {
@@ -45,23 +45,21 @@ public class ActionSMS extends Action
 			throw new NullPointerException();
 		recip = recip.replace('\n', ' ');
 		recip = recip.replace(',', ' ').trim();
-
-		recipients = recip.split(" ");
-		/*
-		Vector<Long> recipientsV = new Vector<Long>();
+		String[] recipientsRAW = recip.split(" ");
+		Vector<String> recipientsV = new Vector<String>();
 		for (String recipient : recipientsRAW)
 		{
 			if (recipient.equals(""))
 			continue;
 			try
 			{
-				recipientsV.add(Long.parseLong(recipient));
+				recipientsV.add(recipient);
 			}
 			catch (NumberFormatException e)
 			{
 			}
 		}
-		this.recipients = recipientsV.toArray(new Long[0]);*/
+		this.recipients = recipientsV.toArray(new String[0]);
 	}
 
 	public String getRecipients()
@@ -112,13 +110,9 @@ public class ActionSMS extends Action
 		{
 			try
 			{
-
-				// błąd w ustawianiu adresata
 				URL url = new URL(String.format(requestUrl, key, message, recipient, from,
 						send, unicode).replaceAll(" ", "%20"));
 				url.getContent();
-
-	
 			}
 			catch (MalformedURLException ex)
 			{

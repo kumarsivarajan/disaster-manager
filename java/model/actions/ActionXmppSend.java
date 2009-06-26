@@ -8,12 +8,13 @@ import java.io.IOException;*/
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import framework.Servlet;
+import java.util.Vector;
 
 public class ActionXmppSend extends Action {
 
-	protected String address = "";
+	protected String[] addresses;
 	protected String message = "";
-	protected String subject = "";
+	protected String subject = "DManager";
 
 	protected String from =
 			Servlet.config.getProperty("action.XmppSend.from");
@@ -34,21 +35,26 @@ public class ActionXmppSend extends Action {
 			throw new NullPointerException();
 		}
 		String[] args = (arguments + "\n\n").split("\n", 3);
-		address = args[0].trim();
-		subject = args[1].trim();
-		message = args[2].trim();
+		setAddresses(args[0].trim());
+		setMessage(args[1].trim());
 	}
 
-	public String getArguments() {
-		return address + "\n" + subject + "\n" + message;
+	public String getArguments()
+	{
+		return getAddresses() + "\n" + getMessage();
 	}
 
 	public ActionType getType() {
 		return ActionType.ACTION_XMPP_SEND;
 	}
 
-	public String getAddress() {
-		return address;
+	public String getAddresses() {
+		String result = "";
+		for (String address : addresses)
+		{
+			result += address + " ";
+		}
+		return result.trim();
 	}
 
 	public String getSubject() {
@@ -59,10 +65,21 @@ public class ActionXmppSend extends Action {
 		return message;
 	}
 
-	public void setAddress(String ad)
+	public void setAddresses(String ad)
 	{
 		//TODO poprawny format
-		address = ad;
+		ad = ad.replace('\n', ' ');
+		ad = ad.replace(',', ' ');
+		String[] addressesRAW = ad.split(" ");
+		Vector<String> addressesV = new Vector<String>();
+		for (String addressRAW : addressesRAW)
+		{
+			if (!"".equals(addressRAW))
+			{
+				addressesV.add(addressRAW);
+			}
+		}
+		addresses = addressesV.toArray(new String[0]);
 	}
 
 	public void setSubject(String sub)
@@ -83,7 +100,8 @@ public class ActionXmppSend extends Action {
 		XMPPConnection connection = new XMPPConnection(conf);
 		try
 		{
-			connection.connect();
+			while (!connection.isConnected())
+				connection.connect();
 		}
 		catch (XMPPException e)
 		{
@@ -92,23 +110,57 @@ public class ActionXmppSend extends Action {
 		}
 		try
 		{
-			connection.login(login, password, "web");
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e)
+		{
+			if (procEx.isShuttingDown())
+				return;
+		}
+		try
+		{
+			while (!connection.isAuthenticated())
+				connection.login(login, password, "web");
 		}
 		catch (XMPPException e)
 		{
 			throw new ActionException("Błąd logowania na serwerze: "
 						+ e.getMessage());
 		}
-		Message mes = new Message(address);
-		mes.setType(Message.Type.normal);
-		mes.setSubject(subject);
-		mes.setBody(message);
-		connection.sendPacket(mes);
+		try
+		{
+			Thread.sleep(500);
+		}
+		catch (InterruptedException e)
+		{
+			if (procEx.isShuttingDown())
+				return;
+		}
+		for (String address : addresses)
+		{
+			Message mes = new Message(address);
+			mes.setType(Message.Type.normal);
+			mes.setSubject(subject);
+			mes.setBody(message);
+			connection.sendPacket(mes);
+		}
 		try {
 		Thread.sleep(500);
 		}
-		catch (InterruptedException e) { }
-		finally {connection.disconnect();}
+		catch (InterruptedException e)
+		{
+			if (procEx.isShuttingDown())
+				return;
+		}
+		connection.disconnect();
+		try{
+			Thread.sleep(1000);
+		}
+		catch(InterruptedException e)
+		{
+			if(procEx.isShuttingDown())
+				return;
+		} 
 		/*XmppSession session = new XmppSession(host, port,
 				XmppSession.COMPONENT_ACCEPT_NAMESPACE);
 		Xmpp2DomTransformer transformer = new Xmpp2DomTransformer(session);
