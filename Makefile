@@ -1,5 +1,6 @@
 # dla windowsa ";" zamiast ":"
-CLASSPATH = /usr/share/java/tomcat6-servlet-2.5-api.jar:./bin/WEB-INF/lib/freemarker.jar:./bin/WEB-INF/lib/mail.jar:./bin/WEB-INF/lib/comm.jar:./bin/WEB-INF/lib/smack.jar:./bin/WEB-INF/lib/smackx.jar
+MORELIBS = `find ./bin/WEB-INF/lib/*.jar | tr '\n' :`
+CLASSPATH = $(MORELIBS)/usr/share/java/tomcat6-servlet-2.5-api.jar
 APPPATH = /srv/tomcat6/webapps/ROOT
 
 SQL_INSTALL=\
