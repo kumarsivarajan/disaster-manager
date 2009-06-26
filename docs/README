@@ -27,3 +27,17 @@ zainteresowanych, jest możliwość wydania pod innymi.
 Autorzy:
 - Tomasz Wasilczyk (www.wasilczyk.pl)
 - Paweł Kimel
+
+--------------------------------------------------------------------------------
+
+Przeznaczenie katalogów w paczce z kodem źródłowym:
+
+- dm-terminal -- kod źródłowy terminala dla PocketPC
+- docs -- dokumenty i instrukcje, takie jak ten
+- hw-probe -- kod źródłowy wsadu do sprzętowej czujki
+- java -- kod źródłowy serwera
+- lib -- wymagane biblioteki (aktualnie tylko JavaComm dla systemu Linux)
+- web -- pliki przeznaczone do skopiowania na serwer
+- wiki -- kod dokumentów wiki, dla Google Code
+- bin -- pliki binarne serwera, skompilowana dokumentacja w tex-u
+- dist -- komplet plików binarnych, do przygotowania paczki
