@@ -1,0 +1,29 @@
+Disaster Manager
+Prototypowy system wspomagający IT Service Continuity Management
+disaster-manager.googlecode.com
+
+ INFORMACJE O SYSTEMIE
+
+--------------------------------------------------------------------------------
+
+Disaster Manager jest prototypowym systemem wspomagającym IT Service Continuity
+Management (część ITIL). Komponentami systemu są:
+
+- serwer, napisany w języku java (JavaSE z elementami JavaEE), w technologii
+  serwlet. Wykorzystuje do działania serwer Apache Tomcat 6, pod kontrolą
+  systemu Linux. Zalecanymi klientami są Firefox 3 oraz Opera 9;
+
+- terminal dla urządzeń PocketPC z systemem Windows Mobile 2003, napisany
+  w języku C#, wykorzystujący .NET Compact Framework 3.5;
+
+- sprzętowa czujka -- układ oparty o mikrokontroler ATMega16, oprogramowany
+  w języku C (C99), wersji dla procesorów AVR.
+
+System powstał w ramach zaliczenia pracowni przedmiotu o ITIL, prowadzonego na
+Instytucie Informatyki Uniwersytetu Wrocławskiego w roku akademickim 2008/2009
+(semestr letni). Objęty jest licencją GNU LGPL, ale na prośbę osób
+zainteresowanych, jest możliwość wydania pod innymi.
+
+Autorzy:
+- Tomasz Wasilczyk (www.wasilczyk.pl)
+- Paweł Kimel

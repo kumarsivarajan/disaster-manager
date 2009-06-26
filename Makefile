@@ -22,7 +22,7 @@ docs/dokument-wizji.pdf: docs/dokument-wizji.tex
 	pdflatex dokument-wizji.tex > /dev/null ;\
 	pdflatex dokument-wizji.tex > /dev/null
 
-bin: docs/dokument-wizji.pdf
+bin:
 	mkdir bin
 	cp -r web/WEB-INF/ bin/
 	find -iregex \./java/.*\.java > bin/srclist
@@ -35,10 +35,12 @@ bin: docs/dokument-wizji.pdf
 	mkdir bin/docs
 	cp docs/dokument-wizji.pdf bin/docs/dokument-wizji.pdf
 
-perms:
+install: install-bin install-db install-demo-db hwprobe-perms
+
+hwprobe-perms:
 	-sudo chmod 666 /dev/ttyUSB*
 
-install: bin perms
+install-bin: bin
 	sudo mkdir -p $(APPPATH)/WEB-INF
 	sudo rm -f -r $(APPPATH)/WEB-INF/*
 	sudo cp -f -r ./bin/WEB-INF/* $(APPPATH)/WEB-INF/
@@ -54,6 +56,8 @@ uninstall-db:
 install-db:
 	sudo /sbin/service mysql start
 	@mysql --user=root -p -e "$(SQL_INSTALL)"
+
+install-demo-db:
 
 clean:
 	@rm -f docs/dokument-wizji.aux

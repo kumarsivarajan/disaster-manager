@@ -1,0 +1,33 @@
+Disaster Manager
+Prototypowy system wspomagający IT Service Continuity Management
+disaster-manager.googlecode.com
+
+ SPRZĘTOWA CZUJKA
+
+--------------------------------------------------------------------------------
+
+System Disaster Manager zawiera komponent sprzętowej czujki, współpracującej
+z serwerem. Można pominąć etap kompilacji oprogramowania, korzystając ze wsadu,
+znajdującego się w pliku hw-probe.hex (w paczce z binarkami).
+
+--------------------------------------------------------------------------------
+
+Pominięte tu zostaną szczegóły techniczne dotyczące podstaw uruchomienia
+mikrokontrolera ATMega16 (szczegóły w jego dokumentacji). Poniżej przedstawiono
+przeznaczenie wyprowadzeń:
+
+UART -- połączony z układem FT232RL, służy do komunikacji z komputerem, poprzez
+  port USB
+
+PORT D - PIN 7 -- zworka określająca, czy układ ma pracować w trybie debugmode,
+  sprawdzana po każdym uruchomieniu urządzenia
+
+PORT C -- sterowanie wyświetlaczem HD44780 4x40 znaków. Nie jest wymaganym
+  komponentem, szczegółowy opis wyprowadzeń znajduje się w pliku LCD4x40.h
+
+PORT A -- port wyjściowy czujki (sterowany z serwera)
+
+PORT B -- port wejściowy (odczytywalny z serwera). Uwaga -- w tym modelu
+  mikroprocesora piny portu pokrywają się z interfejsem ISP! W przypadku
+  wykorzystania tutaj mikroprzełączników, należy pamiętać o rezystorach
+  podciągających

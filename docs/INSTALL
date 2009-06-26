@@ -1,10 +1,84 @@
-Zależności:
-- tomcat6
+Disaster Manager
+Prototypowy system wspomagający IT Service Continuity Management
+disaster-manager.googlecode.com
+
+ INSTALACJA
+
+--------------------------------------------------------------------------------
+
+Plik Makefile został przygotowany z myślą o systemie openSUSE 11.0 / 11.1, ale
+po drobnych modyfikacjach (głównie w zakresie ścieżek systemowych) powinien
+działać i pod innymi dystrybucjami linuksa. Projekt nie jest przewidziany dla
+systemu windows, więc pod jego kontrolą mogą nie działać wszystkie funkcje,
+w szczególności obsługa zewnętrznych czujek może wymagać użycia innej
+biblioteki komunikacyjnej.
+
+
+Wymagane zależności:
+- JDK 1.6.0 (JavaSE -- elementy JavaEE dodano jako zwnętrzne biblioteki jar)
+- Apache Tomcat 6.0
 - tomcat6-servlet-2_5-api
-- mysql 5.0
-- mysql-client (potrzebny przy instalacji)
+- MySQL 5.0
+- mysql-client (potrzebny tylko przy instalacji)
 - mysql-connector-java (JDBC)
 
-Instajacja MySQL JDBC (OpenSuSE 11.1):
-- zainstalować pakiet  mysql-connector-java
-- # ln -s /usr/share/java/mysql-connector-java.jar /usr/share/tomcat6/lib/mysql-connector-java.jar
+
+Instajacja MySQL JDBC (OpenSuSE 11.1 -- możliwe, że inne dystrybucje tego nie
+wymagają):
+- zainstalować pakiet mysql-connector-java
+- z konta roota wykonać polecenie:
+  # ln -s /usr/share/java/mysql-connector-java.jar
+          /usr/share/tomcat6/lib/mysql-connector-java.jar
+
+
+Instalacja komponentu Disaster Manager dla PC (serwera):
+
+- make install
+  Polecenie wykonuje instalację i konfiguruje cały serwer (install-bin,
+  install-db, install-demo-db i hwprobe-perms)
+
+- make install-db
+  Instalacja plików serwletu w katalogu WEB-INF, biblioteki JavaComm oraz
+  restart serwera Tomcat
+
+- make install-db
+  Konfiguracja bazy danych z domyślną nazwą użytkownika, bazy i hasłem.
+  Ewentualne uruchomienie serwera MySQL
+
+- make install-demo-db
+  Wypełnienie bazy danych przykładowymi danymi. Korzysta z domyślnej nazwy
+  użytkownika i hasła
+
+
+Konfiguracja serwera:
+W pliku java/config.ini znajdują się ustawienia dotyczące aplikacji serwera
+Disaster Manager (między innymi dane dostępowe do bazy danych, serwera SMTP).
+Konfiguracja samego serwera Tomcat pozostaje niezmieniona - należy zapoznać
+się z odpowiednią dokumentacją.
+
+--------------------------------------------------------------------------------
+
+Kompilacja komponentu terminala (katalog dm-terminal) dla urządzeń pracujących
+pod kontrolą Windows Mobile 2003 powinna przebiegać w środowisku
+Visual Studio 2008 z zainstalowanymi komponentami dla urządzeń typu "Smart" w
+ramach języka C#.
+
+Urządzeniem, na którym komponent był testowany to HP iPAQ 4150, posiadający
+system Windows Mobile 2003 (pierwszej generacji) -- w związku z tym jest to
+zalecana konfiguracja.
+
+Z uwagi na prototypowy charakter systemu, instalacja komponentu polega na
+ręcznym wgraniu pliku dm-terminal.exe do urządzenia, oraz utworzeniu skrótu w
+katalogu "/Windows/Start Menu/". Ponadto, wymagana jest instalacja na urządzeniu
+.NET Compact Framework w wersji 3.5. Do działania aplikacji wymagane jest
+połączenie z siecią, w której znajduje się serwer (po pierwszym uruchomieniu
+należy w ustawieniach wpisać jego adres).
+
+--------------------------------------------------------------------------------
+
+Komponent sprzętowej czujki został zaprojektowany z wykorzystaniem
+mikrokontrolera Atmel ATMega16. W celu kompilacji pod systemem linux, wymagany
+jest pakiet avr-gcc, do programowania pamięci urządzenia użyto programu avrdude.
+Plik Makefile znajdujący się w katalogu komponentu (hw-probe) nie konfiguruje
+wymienionych pakietów, więc należy to zrobić wcześniej. Istnieje także możliwość
+kompilacji pod systemem Windows, z wykorzystaniem środowiska WinAVR / AVRStudio.
