@@ -21,26 +21,12 @@ CREATE TABLE `message` (
 CREATE TABLE `probe` (
   `id` smallint(5) unsigned NOT NULL auto_increment,
   `name` varchar(64) collate utf8_polish_ci NOT NULL,
-  `type` tinyint(3) unsigned NOT NULL COMMENT 'typ czujnika - szczegóły w kodzie',
-  `query` varchar(255) collate utf8_polish_ci NOT NULL COMMENT 'zapytanie do czujnika',
-  `interval` mediumint(8) unsigned NOT NULL COMMENT 'co ile sekund, czujnik jest odpytywany',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
-
--- --------------------------------------------------------
-
---
--- Struktura tabeli dla  `probe_values`
---
-
-CREATE TABLE `probe_values` (
-  `id` int(10) unsigned NOT NULL auto_increment,
-  `probe` smallint(5) unsigned NOT NULL,
-  `value_min` bigint(20) NOT NULL,
-  `value_max` bigint(20) NOT NULL,
-  `procedure` smallint(5) unsigned NOT NULL COMMENT 'procedura uruchamiana, jeżeli wartość zwrócona przez czujnik jest w zakresie [value_min, value_max]',
+  `interval` mediumint(8) unsigned NOT NULL COMMENT 'co ile sekund jest odpytywany czujnik',
+  `port` tinyint(4) unsigned NOT NULL COMMENT 'numer sprawdzanego portu',
+  `state` tinyint(1) NOT NULL COMMENT 'stan portu, przy którym uruchamiana jest procedura',
+  `procedure` smallint(6) unsigned NOT NULL COMMENT 'procedura uruchamiana po osiągnięciu wybranego stanu',
   PRIMARY KEY  (`id`),
-  KEY `probe` (`probe`)
+  KEY `procedure` (`procedure`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
@@ -56,7 +42,7 @@ CREATE TABLE `procedure` (
   `active` tinyint(1) NOT NULL,
   `added` tinyint(1) NOT NULL default '0' COMMENT 'czy zakończono proces dodawania procedury',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -75,7 +61,7 @@ CREATE TABLE `procedure_action` (
   `added` tinyint(1) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -93,7 +79,7 @@ CREATE TABLE `report` (
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`),
   KEY `date` (`date`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
 
 -- --------------------------------------------------------
 

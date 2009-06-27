@@ -9,6 +9,7 @@ SQL_INSTALL=\
 	GRANT ALL PRIVILEGES ON disaster_manager.* TO 'disaster_manager'@'localhost'; \
 	ALTER DATABASE disaster_manager DEFAULT CHARACTER SET utf8 COLLATE utf8_polish_ci; \
 	USE disaster_manager; \
+	SET CHARACTER SET utf8; \
 	SOURCE db.sql;
 
 # DROP USER może skutkować błędem, więc jest na końcu
@@ -32,9 +33,6 @@ bin:
 	find -iregex \./bin/.*\.svn.* -delete
 	find -iregex \./bin/.*\.java -delete
 	rm bin/srclist
-	
-	mkdir bin/docs
-	cp docs/dokument-wizji.pdf bin/docs/dokument-wizji.pdf
 
 install: install-bin install-db install-demo-db hwprobe-perms
 

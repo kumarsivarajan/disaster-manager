@@ -60,6 +60,12 @@ abstract public class Controller
 		}
 		{
 			SimpleHash button = new SimpleHash();
+			button.put("url", "/messages/inbox/");
+			button.put("caption", "Wiadomości");
+			menu.add(button);
+		}
+		{
+			SimpleHash button = new SimpleHash();
 			button.put("url", "/procedureManagement/list/");
 			button.put("caption", "Zarządzanie procedurami");
 			menu.add(button);
@@ -78,12 +84,10 @@ abstract public class Controller
 		}
 		{
 			SimpleHash button = new SimpleHash();
-			button.put("url", "/messages/inbox/");
-			button.put("caption", "Wiadomości");
+			button.put("url", "/probeManagement/list/");
+			button.put("caption", "Zarządzanie czujnikami");
 			menu.add(button);
 		}
-
-		
 		
 		tpl.setDecoratorVar("menubuttons", menu);
 	}
