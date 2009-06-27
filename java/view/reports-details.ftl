@@ -37,7 +37,7 @@
 	<thead>
 		<tr>
 			<th>Typ</th>
-			<th>Etykieta</th>
+			<#-- <th>Etykieta</th> -->
 			<th>Czas wykonania</th>
 			<th>Data</th>
 		</tr>
@@ -46,7 +46,6 @@
 		<#list report.getLog() as reportAction>
 			<tr>
 				<td>${reportAction.getTypeName()}</td>
-				<td>(TODO)</td>
 				<td <#if reportAction.haveTimeoutWarning()> class="warning" </#if> >
 					${reportAction.getUsedTime()}s
 					<#if reportAction.getMaxTime()??>
