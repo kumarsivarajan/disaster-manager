@@ -1,8 +1,7 @@
 package model;
 
 import framework.*;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import model.actions.Action;
 
 public class ExecutionReportAction

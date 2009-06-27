@@ -6,7 +6,6 @@ import java.util.*;
 import model.*;
 import tools.Pair;
 
-
 public abstract class Action
 {
 	protected Integer id;

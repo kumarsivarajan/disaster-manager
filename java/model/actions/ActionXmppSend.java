@@ -1,10 +1,6 @@
 package model.actions;
 
 import model.*;
-/*import com.realtime.xmpp.*;
-import com.realtime.xmpp.dom.*;
-import com.realtime.xmpp.util.*;
-import java.io.IOException;*/
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.*;
 import framework.Servlet;

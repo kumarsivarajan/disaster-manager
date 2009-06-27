@@ -1,6 +1,5 @@
 package model.actions;
 
-import java.sql.SQLException;
 import javax.servlet.ServletException;
 
 public class ActionException extends ServletException

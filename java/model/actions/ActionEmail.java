@@ -4,9 +4,8 @@ import framework.Servlet;
 import model.*;
 import tools.StringTools;
 import java.util.*;
-
-import javax.mail.Message.RecipientType;
 import javax.mail.*;
+import javax.mail.Message.RecipientType;
 import javax.mail.internet.*;
 
 public class ActionEmail extends Action

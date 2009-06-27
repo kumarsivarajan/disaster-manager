@@ -1,16 +1,13 @@
 package framework;
 
 import controller.*;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.sql.SQLException;
 import java.util.*;
 import javax.servlet.ServletException;
 import javax.servlet.http.*;
 import tools.RegexpMatcher;
-
-import model.*;
-import model.actions.*;
+import model.Probe;
 
 public class Servlet extends HttpServlet
 {

@@ -3,8 +3,6 @@ package model;
 //uprawnienia: chmod 0666 /dev/ttyUSB*
 
 import java.io.*;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 import javax.comm.*;
 

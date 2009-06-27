@@ -1,18 +1,14 @@
-
 package model.actions;
 
-import model.Procedure;
-import model.ProcedureExecution;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import tools.StringTools;
 import framework.Servlet;
+import model.*;
+import java.io.IOException;
+import java.net.*;
+import tools.StringTools;
 import java.util.Vector;
 
 public class ActionSMS extends Action
 {
-	//TODO: do konfiga, "final", zdublowany konfig z SMSMessage
 	protected String[] recipients = new String[0];
 	protected String message = "";
 

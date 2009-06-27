@@ -1,6 +1,7 @@
 package framework;
 
 import java.sql.*;
+import java.util.Collection;
 
 /*
  * Instalacja jdbc dla mysql:
@@ -12,7 +13,6 @@ import java.sql.*;
  * http://dev.mysql.com/doc/refman/5.0/en/connector-j.html
  * http://www.fluffycat.com/Java/ResultSet/
  */
-import java.util.Collection;
 
 class SQLQueryException extends SQLException
 {

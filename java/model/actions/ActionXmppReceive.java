@@ -1,18 +1,10 @@
 package model.actions;
 
-import model.*;
-/*import com.realtime.xmpp.*;
-import com.realtime.xmpp.dom.*;
-import com.realtime.xmpp.util.HandshakeRequest;*/
-import org.jivesoftware.smack.*;
-import org.jivesoftware.smackx.*;
-import org.jivesoftware.smack.packet.*;
-import org.jivesoftware.smackx.packet.*;
-import org.jivesoftware.smack.filter.*;
-import java.io.IOException;
-import java.util.*;
 import framework.Servlet;
-
+import model.*;
+import org.jivesoftware.smack.*;
+import org.jivesoftware.smack.packet.*;
+import org.jivesoftware.smack.filter.*;
 
 public class ActionXmppReceive extends Action
 {

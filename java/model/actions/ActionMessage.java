@@ -1,7 +1,6 @@
 package model.actions;
 
 import model.*;
-import framework.*;
 import java.sql.SQLException;
 
 public class ActionMessage extends Action

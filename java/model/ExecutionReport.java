@@ -1,8 +1,7 @@
 package model;
 
 import framework.*;
-import java.sql.SQLException;
-import java.sql.Timestamp;
+import java.sql.*;
 import java.util.HashMap;
 import model.actions.Action;
 
