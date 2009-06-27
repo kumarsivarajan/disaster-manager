@@ -37,20 +37,20 @@ public class ActionXmppSend extends Action {
 
 	public String getArguments()
 	{
-		return getAddresses() + "\n" + getMessage();
+		return getAddress() + "\n" + getMessage();
 	}
 
 	public ActionType getType() {
 		return ActionType.ACTION_XMPP_SEND;
 	}
 
-	public String getAddresses() {
+	public String getAddress() {
 		String result = "";
 		for (String address : addresses)
 		{
 			result += address + " ";
 		}
-		return result.trim();
+		return result;
 	}
 
 	public String getSubject() {
