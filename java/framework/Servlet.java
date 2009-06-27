@@ -28,6 +28,7 @@ public class Servlet extends HttpServlet
 		matchers.add(new ControllerMatch("Reports", "^/reports/((?:[a-z0-9-]+/)*)"));
 		matchers.add(new ControllerMatch("API", "^/api/((?:[\\w\\d-]+/)*)"));
 		matchers.add(new ControllerMatch("ProbeManager", "^/probeManagement/((?:[a-z0-9-]+/)*)"));
+		matchers.add(new ControllerMatch("Message", "^/message/((?:[a-z0-9-]+/)*)"));
 
 		String rootPath = getServletContext().getRealPath("/");
 		String classesPath = rootPath + "WEB-INF/classes/";
@@ -45,13 +46,13 @@ public class Servlet extends HttpServlet
 		config.setProperty("path.root", rootPath);
 		config.setProperty("path.classes", classesPath);
 
-		try
-		{
-			Probe.getAllProbes();
-		}
-		catch (SQLException e)
-		{
-		}
+	//	try
+	//	{
+	//		Probe.getAllProbes();
+	//	}
+	//	catch (SQLException e)
+	//	{
+	//	}
 	}
 
 	@Override public void finalize() throws Throwable
@@ -103,6 +104,8 @@ public class Servlet extends HttpServlet
 				controller = new APIController(request, response);
 			else if (cm.controllerName.equals("ProbeManager"))
 				controller = new ProbeManagerController(request, response);
+			else if (cm.controllerName.equals("Message"))
+				controller = new MessageController(request, response);
 			else
 				throw new AssertionError("Nie uwzględniono kontrolera: " + cm.controllerName);
 			

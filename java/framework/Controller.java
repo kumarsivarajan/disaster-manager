@@ -88,7 +88,13 @@ abstract public class Controller
 			button.put("caption", "Zarządzanie czujnikami");
 			menu.add(button);
 		}
-		
+		{
+
+			SimpleHash button = new SimpleHash();
+			button.put("url", "/message/inbox/");
+			button.put("caption", "Wiadomości");
+			menu.add(button);
+		}
 		tpl.setDecoratorVar("menubuttons", menu);
 	}
 	

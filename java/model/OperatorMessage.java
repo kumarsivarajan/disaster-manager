@@ -10,6 +10,16 @@ public class OperatorMessage
 	private boolean read = false;
 	private Timestamp date;
 
+	public void setID(Integer i)
+	{
+		id = i;
+	}
+
+	public void setDate(Timestamp t)
+	{
+		date = t;
+	}
+
 	public OperatorMessage(String message)
 	{
 		if (message == null)
@@ -56,6 +66,12 @@ public class OperatorMessage
 				" ORDER BY `date` DESC"));
 	}
 
+	public static OperatorMessage[] getAllMessages() throws SQLException
+	{
+		return getMessagesFromSQL(DBEngine.getAllRows(
+				"SELECT * FROM `message` ORDER BY `date` DESC"));
+	}
+
 	public static OperatorMessage getMessageByID(int id) throws SQLException
 	{
 		return getMessageFromSQL(DBEngine.getRow(
@@ -80,6 +96,11 @@ public class OperatorMessage
 			DBEngine.updateByID("message", new SQLRow() {{
 				put("read", read);
 				}}, id);
+	}
+
+	public boolean read()
+	{
+		return read;
 	}
 
 	public int getID()
