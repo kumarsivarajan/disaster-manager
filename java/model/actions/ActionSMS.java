@@ -9,7 +9,7 @@ import java.util.Vector;
 
 public class ActionSMS extends Action
 {
-	protected String[] recipients = new String[0];
+	protected String recipient;
 	protected String message = "";
 
 	protected final static String from = 
@@ -35,10 +35,15 @@ public class ActionSMS extends Action
 	}
 
 
-	public void setRecipients(String recip)
+	public void setRecipient(String recip)
 	{
 		if (recip == null)
 			throw new NullPointerException();
+		if (recip.length() == 9)
+			recipient = "48" + recip;
+		else
+			recipient = recip;
+		/*
 		recip = recip.replace('\n', ' ');
 		recip = recip.replace(',', ' ').trim();
 		String[] recipientsRAW = recip.split(" ");
@@ -47,20 +52,16 @@ public class ActionSMS extends Action
 		{
 			if (recipient.equals(""))
 			continue;
-			try
-			{
-				recipientsV.add(recipient);
-			}
-			catch (NumberFormatException e)
-			{
-			}
+			recipientsV.add(recipient);
 		}
-		this.recipients = recipientsV.toArray(new String[0]);
+		this.recipients = recipientsV.toArray(new String[0]);*/
 	}
 
-	public String getRecipients()
+	public String getRecipient()
 	{
-		return StringTools.join(", ", recipients);
+		if (recipient == null)
+			return "";
+		return recipient;
 	}
 
 	public void setMessage(String message)
@@ -82,15 +83,15 @@ public class ActionSMS extends Action
 	
 	public String getArguments()
 	{
-		return getRecipients() + "\n" + getMessage();
+		return getRecipient() + "\n" + getMessage();
 	}
 
 	protected void setArguments(String arguments)
 	{
 		if (arguments == null)
 			throw new NullPointerException();
-		String[] args = (arguments + "\n\n").split("\n", 3);
-		setRecipients(args[0].trim());
+		String[] args = (arguments + "\n").split("\n", 2);
+		setRecipient(args[0]);
 		setMessage(args[1].trim());
 	}
 
@@ -100,15 +101,17 @@ public class ActionSMS extends Action
 
 		if (message == null)
 			throw new ActionException("Błąd wysyłania SMS. Brak treści wiadomości.");
+		if (recipient == null)
+			throw new ActionException("Błąd wysyłania SMS. Brak numeru odbiorcy.");
+		if (recipient.length()!= 11)
+			throw new ActionException("Błąd wysyłania SMS. Błędny numer odbiorcy: " + recipient.length());
  
 
-		for (String recipient : recipients)
-		{
 			try
 			{
 				URL url = new URL(String.format(requestUrl, key, message, recipient, from,
 						send, unicode).replaceAll(" ", "%20"));
-				url.getContent();
+				url.getContent( );
 			}
 			catch (MalformedURLException ex)
 			{
@@ -121,7 +124,7 @@ public class ActionSMS extends Action
 						+ ex.getMessage());
 			}
 
-		}
+		
 
 
 	}

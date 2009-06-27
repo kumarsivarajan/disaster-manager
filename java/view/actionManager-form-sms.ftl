@@ -1,4 +1,4 @@
-<p>Odbiorca: <input type="text" name="actionParam-addresses" value="${action.getRecipients()?html}" /></p>
+<p>Odbiorca: <input type="text" name="actionParam-recipients" value="${action.getRecipient()?html}" /></p>
 <#--
 	<p>Nadawca: <input type="text" name="actionParam-subject" value="${action.getFrom()?html}" /></p>
 -->

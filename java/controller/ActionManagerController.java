@@ -77,7 +77,7 @@ public class ActionManagerController extends Controller
 			else if (action instanceof ActionSMS)
 			{
 				ActionSMS a = (ActionSMS)action;
-				a.setRecipients(getParameterString("actionParam-recipients"));
+				a.setRecipient(getParameterString("actionParam-recipients"));
 				a.setMessage(getParameterString("actionParam-message"));
 			}
 			else if (action instanceof ActionSerialProbeSet)
