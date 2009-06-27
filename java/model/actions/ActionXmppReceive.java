@@ -128,18 +128,19 @@ public class ActionXmppReceive extends Action
 			if (pack instanceof Message)
 			{
 				mes = (Message)pack;
+				String body = mes.getBody().trim();
+				if (body.startsWith(message.trim()))
+				{
+					acknowledge(true);
+					conn.disconnect();
+					return;
+				}
 			}
 			else
 			{
 				throw new ActionException("Shouldn't  be");
 			}
-			String body = mes.getBody().trim();
-			if (body.startsWith(message.trim()))
-			{
-				acknowledge(true);
-				conn.disconnect();
-				return;
-			}
+			
 		}
 //
 //
