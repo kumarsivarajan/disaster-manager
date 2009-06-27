@@ -26,6 +26,7 @@ public class ProbeManagerController extends Controller
 		Probe probe = new Probe();
 		probe.save();
 
+		tpl.setVar("procedures", Procedure.getAllProcedures(true));
 		tpl.setVar("probe", probe);
 		tpl.display("probeManager-form.ftl");
 		return;

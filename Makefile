@@ -17,6 +17,11 @@ SQL_UNINSTALL=\
 	DROP DATABASE IF EXISTS disaster_manager; \
 	DROP USER 'disaster_manager'@'localhost';
 
+SQL_INSTALL_DEMO=\
+	USE disaster_manager; \
+	SET CHARACTER SET utf8; \
+	SOURCE demo.sql;
+
 all: docs/dokument-wizji.pdf bin
 
 docs/dokument-wizji.pdf: docs/dokument-wizji.tex
@@ -57,6 +62,34 @@ install-db:
 	@mysql --user=root -p -e "$(SQL_INSTALL)"
 
 install-demo-db:
+	mysql --user=disaster_manager --password=dmpass -e "$(SQL_INSTALL_DEMO)"
+
+hw-probe/hw-probe.hex:
+	cd hw-probe ;\
+	make hw-probe.hex
+
+#aby utworzyć paczkę, należy przygotować skompilowany program dm-terminal/dm-terminal.exe
+bin-pack: hw-probe/hw-probe.hex docs/dokument-wizji.pdf bin
+	mkdir bin-pack
+	mkdir bin-pack/docs
+	mkdir bin-pack/lib
+	cp docs/dokument-wizji.pdf bin-pack/docs/
+	cp docs/HW-PROBE bin-pack/docs/
+	cp docs/INSTALL bin-pack/docs/
+	cp docs/README bin-pack/docs/
+	cp -r bin/ bin-pack/bin/
+	cp *.sql bin-pack/
+	cp Makefile bin-pack/
+	cp hw-probe/hw-probe.hex bin-pack/
+	cp lib/*.* bin-pack/lib/
+	cp dm-terminal/dm-terminal.exe bin-pack/
+
+targz: disaster-manager-bin-rXX.tar.gz
+disaster-manager-bin-rXX.tar.gz: bin-pack
+	rm -f -r disaster-manager-bin-rXX
+	mv bin-pack disaster-manager-bin-rXX
+	tar -cf disaster-manager-bin-rXX.tar disaster-manager-bin-rXX/*
+	gzip -f disaster-manager-bin-rXX.tar
 
 clean:
 	@rm -f docs/dokument-wizji.aux
@@ -65,3 +98,8 @@ clean:
 	@rm -f docs/dokument-wizji.pdf
 	@rm -f docs/dokument-wizji.toc
 	@rm -f -r bin
+	@rm -f -r bin-pack
+	@rm -f -r disaster-manager-bin-r*
+	@rm -f dm-terminal/dm-terminal.exe
+	@cd hw-probe ;\
+	make clean

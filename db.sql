@@ -10,7 +10,7 @@ CREATE TABLE `message` (
   `read` tinyint(1) NOT NULL default '0' COMMENT 'czy wiadomość została przeczytana',
   `date` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='wiadomości dla operatora';
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='wiadomości dla operatora';
 
 -- --------------------------------------------------------
 
@@ -24,7 +24,7 @@ CREATE TABLE `probe` (
   `interval` mediumint(8) unsigned NOT NULL COMMENT 'co ile sekund jest odpytywany czujnik',
   `port` tinyint(4) unsigned NOT NULL COMMENT 'numer sprawdzanego portu',
   `state` tinyint(1) NOT NULL COMMENT 'stan portu, przy którym uruchamiana jest procedura',
-  `procedure` smallint(6) unsigned NOT NULL COMMENT 'procedura uruchamiana po osiągnięciu wybranego stanu',
+  `procedure` smallint(6) unsigned default NULL COMMENT 'procedura uruchamiana po osiągnięciu wybranego stanu',
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
@@ -42,7 +42,7 @@ CREATE TABLE `procedure` (
   `active` tinyint(1) NOT NULL,
   `added` tinyint(1) NOT NULL default '0' COMMENT 'czy zakończono proces dodawania procedury',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -61,7 +61,7 @@ CREATE TABLE `procedure_action` (
   `added` tinyint(1) NOT NULL,
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci;
 
 -- --------------------------------------------------------
 
@@ -79,7 +79,7 @@ CREATE TABLE `report` (
   PRIMARY KEY  (`id`),
   KEY `procedure` (`procedure`),
   KEY `date` (`date`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_polish_ci COMMENT='raporty z wykonanych procedur';
 
 -- --------------------------------------------------------
 
