@@ -8,7 +8,7 @@ import java.util.Vector;
 
 public class ActionXmppSend extends Action {
 
-	protected String[] addresses;
+	protected String[] addresses = new String[0];
 	protected String message = "";
 	protected String subject = "DManager";
 
