@@ -1,5 +1,18 @@
 #labels Featured
 =Disaster Manager - interfejs webowy=
 
-[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Edycja_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-3.png]
-[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Raport_wykonania_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-4.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Edycja_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-1.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Raport_wykonania_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-2.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Konfiguracja_czujnika http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-3.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Wygląd_interfejsu http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-4.png]
+
+=Disaster Manager Terminal=
+
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Lista_komunikatów http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmt-1.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Lista_procedur http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmt-2.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Okno_konfiguracji http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmt-3.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Komunikat_o_nowej_wiadomości http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmt-4.png]
+
+=Czujnik sprzętowy=
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Tryb_produkcyjny http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmhwp-1.jpg]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Tryb_debug http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dmhwp-2.jpg]
