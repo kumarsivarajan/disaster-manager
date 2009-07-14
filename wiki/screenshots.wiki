@@ -1,4 +1,5 @@
 #labels Featured
-=Zrzuty ekranów=
+=Disaster Manager - interfejs webowy=
 
-TODO
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Edycja_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-3.png]
+[http://code.google.com/p/disaster-manager/wiki/screenshotsBig#Raport_wykonania_procedury http://disaster-manager.googlecode.com/svn/wiki/screenshots/mini/dm-4.png]
